@@ -15,7 +15,7 @@ Defaults from last run::
   > Project name: edafos
   > Author name(s): Nick Machairas
   > Project version []: 0.1.0
-  > Project release [0.1.0]: 0.1.0
+  > Project release [0.1.0]:
   > Project language [en]:
   > Source file suffix [.rst]:
   > Name of your master document (without suffix) [index]:
@@ -32,3 +32,6 @@ Defaults from last run::
   > githubpages: create .nojekyll file to publish the document on GitHub pages (y/n) [n]: y
   > Create Makefile? (y/n) [y]:
   > Create Windows command file? (y/n) [y]:
+
+Build html::
+  > make html
