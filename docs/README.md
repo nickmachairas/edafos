@@ -1,14 +1,14 @@
-======================
-Documentation How-To's
-======================
+# Documentation How-To's
 
-Build a template, using sphinx-quickstart::
+Build a template, using sphinx-quickstart:
 
+```
   > sphinx-quickstart
+```
 
+Defaults from last run:
 
-Defaults from last run::
-
+```
   > Root path for the documentation [.]: docs
   > Separate source and build directories (y/n) [n]:
   > Name prefix for templates and static dir [_]:
@@ -32,6 +32,9 @@ Defaults from last run::
   > githubpages: create .nojekyll file to publish the document on GitHub pages (y/n) [n]: y
   > Create Makefile? (y/n) [y]:
   > Create Windows command file? (y/n) [y]:
+```
 
-Build html::
+Build html:
+```
   > make html
+```
