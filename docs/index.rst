@@ -3,17 +3,28 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-ἔ.δα.φος
+========
+ἔ·δα·φος
 ========
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+Welcome to the detailed documentation of the Python package ``edafos``, the most comprehensive suite of Soil Mechanics algorithms.
 
+The name, **edafos**, comes from the greek *ἔ·δα·φος*, which means *"The upper layer of the Earth's crust"*.
+
+
+Contents:
+---------
+
+.. toctree::
+   :numbered:
+   :maxdepth: 2
+   :caption: Table of Contents:
+
+   units
 
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
