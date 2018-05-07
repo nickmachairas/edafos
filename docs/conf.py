@@ -39,6 +39,10 @@ release = '0.1.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'matplotlib.sphinxext.only_directives',
+    'matplotlib.sphinxext.plot_directive',
+    'IPython.sphinxext.ipython_directive',
+    'IPython.sphinxext.ipython_console_highlighting',
     'sphinx.ext.autodoc',
     'sphinx.ext.todo',
     'sphinx.ext.mathjax',
@@ -113,8 +117,10 @@ html_static_path = ['_static']
 html_sidebars = {
     '**': [
         'about.html',
-        'navigation.html',
-        'relations.html',  # needs 'show_related': True theme option to display
+        'localtoc.html',
+        #'globaltoc.html',
+        #'navigation.html',
+        #'relations.html',  # needs 'show_related': True theme option to display
         'searchbox.html',
     ]
 }
@@ -139,7 +145,11 @@ latex_elements = {
 
     # Additional stuff for the LaTeX preamble.
     #
-    # 'preamble': '',
+    'preamble': """
+        \usepackage[utf8x]{inputenc}
+
+    """,
+    'inputenc': '',
 
     # Latex figure (float) alignment
     #

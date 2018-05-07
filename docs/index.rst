@@ -3,24 +3,69 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+
+.. image:: _static/edafos.png
+   :scale: 33 %
+   :alt: edafos
+   :align: left
+   :target: http://edafos.io
+
+
 ========
-ἔ·δα·φος
+(edafos)
 ========
 
-Welcome to the detailed documentation of the Python package ``edafos``, the most comprehensive suite of Soil Mechanics algorithms.
 
-The name, **edafos**, comes from the greek *ἔ·δα·φος*, which means *"The upper layer of the Earth's crust"*.
+Welcome to the detailed documentation of the Python package ``edafos``, the
+most comprehensive suite of Soil Mechanics algorithms.
+
+The name, **edafos**, comes from the similarly pronounced greek word which
+translates to *"The upper layer of the Earth's crust"*.
+
+Given that the `author`_'s expertise is in driven piles, the first version of
+this module focuses on the design of Deep Foundations.
+
+Use the table of contents below to navigate.
+
+.. _author: https://www.linkedin.com/in/nmachairas/
+
+|
+
+----
+
+|
 
 
-Contents:
----------
+Introduction
+------------
+
+.. topic:: Contents of this Chapter
+
+   Add text...
+
 
 .. toctree::
-   :numbered:
+   :caption: INTRODUCTION:
    :maxdepth: 2
-   :caption: Table of Contents:
 
    units
+
+
+
+
+Soil Profile
+------------
+
+.. topic:: Contents of this Chapter
+
+   Add text...
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: SOIL PROFILE:
+
+   soil_profile
 
 
 Indices and tables
