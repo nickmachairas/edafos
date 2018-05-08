@@ -1,0 +1,39 @@
+.sphinxsidebarwrapper .caption-text {
+  /* font-size: 16px; */
+  font-weight: 600;
+}
+
+.sphinxsidebarwrapper .caption {
+  margin-bottom: 5px !important;
+}
+
+.sphinxsidebarwrapper ul {
+  margin-top: 5px !important;
+  margin-bottom: 15px !important;
+}
+
+.figure .caption  {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+table caption  {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+table thead, table tbody  {
+  font-size: 13px;
+}
+
+table th, table td {
+  text-align: center !important;
+  vertical-align: middle;
+}
+
+/**
+img.logo {
+  max-width: 75%;
+}
+**/

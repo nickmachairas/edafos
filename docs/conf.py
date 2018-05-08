@@ -4,7 +4,7 @@
 #
 # This file does only contain a selection of the most common options. For a
 # full list see the documentation:
-# http://www.sphinx-doc.org/en/master/config
+# http://www.sphinx-doc.org/en/master/config.html
 
 # -- Path setup --------------------------------------------------------------
 
@@ -106,6 +106,9 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+def setup(app):
+    app.add_stylesheet('css/custom.css')
+
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
 #
@@ -117,8 +120,8 @@ html_static_path = ['_static']
 html_sidebars = {
     '**': [
         'about.html',
-        'localtoc.html',
-        #'globaltoc.html',
+        #'localtoc.html',
+        'globaltoc.html',
         #'navigation.html',
         #'relations.html',  # needs 'show_related': True theme option to display
         'searchbox.html',
@@ -214,3 +217,13 @@ epub_exclude_files = ['search.html']
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+
+# -- Figure/Table referencing ------------------------------------------------
+# http://www.sphinx-doc.org/en/stable/config.html#confval-numfig
+# https://stackoverflow.com/questions/2686310/referencing-figures-with-numbers-in-sphinx-and-restructuredtext
+
+numfig = True
+numfig_format = {'figure': 'Figure %s', 'table': 'Table %s',
+                 'code-block': 'Listing %s', 'section': 'Section %s'}
+numfig_secnum_depth = 1

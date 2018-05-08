@@ -22,10 +22,10 @@ most comprehensive suite of Soil Mechanics algorithms.
 The name, **edafos**, comes from the similarly pronounced greek word which
 translates to *"The upper layer of the Earth's crust"*.
 
-Given that the `author`_'s expertise is in driven piles, the first version of
-this module focuses on the design of Deep Foundations.
+The first version of this module focuses on the design of Deep Foundations,
+given that the `author`_'s doctoral dissertation is in driven piles.
 
-Use the table of contents below to navigate.
+Use the table of contents to navigate.
 
 .. _author: https://www.linkedin.com/in/nmachairas/
 
@@ -39,7 +39,7 @@ Use the table of contents below to navigate.
 Introduction
 ------------
 
-.. topic:: Contents of this Chapter
+.. topic:: Contents of this Section
 
    Add text...
 
@@ -56,13 +56,13 @@ Introduction
 Soil Profile
 ------------
 
-.. topic:: Contents of this Chapter
+.. topic:: Contents of this Section
 
    Add text...
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: SOIL PROFILE:
 
    soil_profile
