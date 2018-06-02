@@ -6,7 +6,7 @@ Layer Delineation
 
 Most of the design problems encountered in Soil Mechanics involve calculations
 with geotechnical properties of soil profiles that have been deduced from raw
-geotechnical data. Case in point, recomendended step-by-step design procedures
+geotechnical data. Case in point, recommended step-by-step design procedures
 within `FHWA GEC 012`_ start by delineating the soil profile into layers using
 soil test data.
 
@@ -37,7 +37,7 @@ There is no standard process for layer delineation. In the left-hand side of
 :numref:`spt_delineation_example`, the field SPT N values are plotted with
 depth. There is an obvious "jump" in the N values at a depth of about 48 feet.
 This is indicative of a change in soil conditions, hence, delineating in two
-layers at this interface is reasonble. However, the change at depth 23 ft. is
+layers at this interface is reasonable. However, the change at depth 23 ft. is
 not as apparent based on N values alone. In such cases the N values are
 corroborated with other information obtained during subsurface investigations
 such as sample color, texture and geotechnical properties.
@@ -118,5 +118,5 @@ Implementation in ``edafos``
 ****************************
 
 The average values of the geotechnical properties are used in design and other
-calulations with very few exceptions. This approximation is convenient for hand
+calculations with very few exceptions. This approximation is convenient for hand
 calculations but not necessary in algorithmic analyses.
