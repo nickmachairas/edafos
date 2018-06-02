@@ -1,7 +1,6 @@
-# For the documentation:
 numpy==1.14.3
-pandas==0.22.0
+pandas==0.23.0
 matplotlib==2.2.2
 pint==0.8.1
-sphinx==1.7.4
-ipython==6.3.1
+sphinx==1.7.5
+ipython==6.4.0
