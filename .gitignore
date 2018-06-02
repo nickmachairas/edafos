@@ -1,3 +1,6 @@
+# PyCharm project folder
+.idea/
+
 # Mac OS X filesystem
 .DS_Store
 
