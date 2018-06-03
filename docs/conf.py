@@ -12,9 +12,10 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath('../'))
 
 
 # -- Project information -----------------------------------------------------
@@ -44,12 +45,20 @@ extensions = [
     'IPython.sphinxext.ipython_directive',
     'IPython.sphinxext.ipython_console_highlighting',
     'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
 ]
+
+# This is the best option to add the __init__ method in the documentation.
+# I found it in the bokeh docs.
+napoleon_include_init_with_doc = True
+
+# Remove the chain of module names
+add_module_names = False
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -84,7 +93,7 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'bizstyle' # 'alabaster'
 
 html_favicon = '_static/favicon.png'
 
@@ -92,22 +101,22 @@ html_favicon = '_static/favicon.png'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {
-    'logo': 'logo.png',
-    'logo_name': True,
-    'description': 'A suite of Soil Mechanics algorithms',
-    'github_user': 'nickmachairas',
-    'github_repo': 'edafos',
-    'github_button': True,
-}
+# html_theme_options = {
+#     'logo': 'logo.png',
+#     'logo_name': True,
+#     'description': 'A suite of Soil Mechanics algorithms',
+#     'github_user': 'nickmachairas',
+#     'github_repo': 'edafos',
+#     'github_button': True,
+# }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-def setup(app):
-    app.add_stylesheet('css/custom.css')
+# def setup(app):
+#     app.add_stylesheet('css/custom.css')
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -119,15 +128,18 @@ def setup(app):
 #
 html_sidebars = {
     '**': [
-        'about.html',
-        #'localtoc.html',
+        # 'about.html',
         'globaltoc.html',
-        #'navigation.html',
-        #'relations.html',  # needs 'show_related': True theme option to display
+        'localtoc.html',
+        # 'navigation.html',
+        'relations.html',  # needs 'show_related': True theme option to display
+        'sourcelink.html',
         'searchbox.html',
     ]
 }
 
+html_logo = '_static/logo.png'
+html_short_title = 'edafos: A Python Module for Soil Mechanics'
 
 # -- Options for HTMLHelp output ---------------------------------------------
 

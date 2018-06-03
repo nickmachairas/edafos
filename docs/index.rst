@@ -4,19 +4,19 @@
    contain the root `toctree` directive.
 
 
-.. image:: _static/edafos.png
+.. .. image:: _static/edafos.png
    :scale: 33 %
    :alt: edafos
    :align: left
    :target: http://edafos.io
 
 
-========
-(edafos)
-========
+============
+[``edafos``]
+============
 
 
-Welcome to the detailed documentation of the Python package ``edafos``, the
+Welcome to the detailed documentation of the Python module ``edafos``, the
 most comprehensive suite of Soil Mechanics algorithms.
 
 The name, **edafos**, comes from the similarly pronounced greek word which
@@ -31,9 +31,6 @@ Use the table of contents to navigate.
 
 |
 
-----
-
-|
 
 
 Introduction
@@ -67,6 +64,23 @@ Soil Profile
 
    soil_profile
 
+
+
+
+API Reference
+-------------
+
+.. topic:: Contents of this Section
+
+   This section provides the complete API reference for ``edafos``,
+   auto-generated from the docstrings in the project source code.
+
+
+.. toctree::
+   :maxdepth: 3
+   :caption: API REFERENCE:
+
+   api_reference
 
 Indices and tables
 ------------------
