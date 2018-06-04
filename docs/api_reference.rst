@@ -17,3 +17,13 @@ from the docstrings in the project source code.
     :members:
     :undoc-members:
     :show-inheritance:
+
+******************
+``edafos.profile``
+******************
+
+.. automodule:: edafos.soil.profile
+    :members:
+    :undoc-members:
+    :private-members:
+    :show-inheritance:
