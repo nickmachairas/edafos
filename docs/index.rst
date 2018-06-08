@@ -63,6 +63,7 @@ Soil Profile
    :caption: SOIL PROFILE:
 
    soil/delineation
+   soil/stresses
 
 
 

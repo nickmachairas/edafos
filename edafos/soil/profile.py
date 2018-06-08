@@ -40,13 +40,36 @@ class SoilProfile(Project):
 
         """
         super().__init__(unit_system=unit_system)
-        if self.unit_system == 'SI':
-            self.water_table = float(water_table) * units.meter
-        else:
-            self.water_table = float(water_table) * units.feet
+
+        # Set units for the water table
+        self.water_table = float(water_table) * self._set_units('length')
 
         # Call function to instantiate the soil profile data frame
         self._create_profile()
+
+    # -- A Helper Method to set units (Private) ------------------------------
+
+    def _set_units(self, dim):
+        """ A private helper method that returns the Pint units to be attached
+        to a variable based on the set unit system and dimensionality (dim).
+        Since this is a private method, the stored values will not be shown
+        in the docstring. Refer to the `unit_dict` in the code.
+
+        Args:
+            dim (str): The dimensionality for the variable. For example, layer
+                height is 'length'.
+
+        Returns:
+            Pint units.
+
+        """
+        unit_dict = {
+            'length': {'SI': units.meter, 'English': units.feet},
+            'tuw': {'SI': units.kN / units.meter ** 3,
+                    'English': units.lbf / units.feet ** 3},
+        }
+
+        return unit_dict[dim][self.unit_system]
 
     # -- Soil Profile Instantiation Method (Private) -------------------------
 
@@ -193,7 +216,25 @@ class SoilProfile(Project):
             Quantity: A physical quantity with associated units.
 
         """
+        # Set units for input parameter, z
+        z = float(z) * self._set_units('length')
 
+        # Define zw, the vertical distance below the water table.
+        zw = z - self.water_table
+        if zw.magnitude < 0:
+            zw = 0 * zw.units
+
+        # Define total stress
+        h1 = self.layers['Height'].loc[1].values[0] * self._set_units('length')
+        g1 = self.layers['TUW'].loc[1].values[0] * self._set_units('tuw')
+        if z < h1:
+            total_stress = z * g1
+        elif z in self.layers['Depth'].values:
+            # This is where you stopped
+        else:
+            total_stress = 0.00000001
+
+        return zw, total_stress
 
     def __str__(self):
         return "Unit system: {0.unit_system}\nDepth to Water Table: " \
