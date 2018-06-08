@@ -24,7 +24,7 @@ field tests for "North Abutment S-1" (after `FHWA GEC 012`_).
 
 
 .. _spt_delineation_example:
-.. figure:: _static/figures/FHWA_S-1_example_Nvals.png
+.. figure:: ../_static/figures/FHWA_S-1_example_Nvals.png
    :alt: FHWA_S-1_example_Nvals.png
    :align: center
 

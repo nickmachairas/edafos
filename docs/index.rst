@@ -45,7 +45,7 @@ Introduction
    :caption: INTRODUCTION:
    :maxdepth: 2
 
-   units
+   intro/units
 
 
 
@@ -62,7 +62,7 @@ Soil Profile
    :maxdepth: 3
    :caption: SOIL PROFILE:
 
-   soil_profile
+   soil/delineation
 
 
 
@@ -80,7 +80,7 @@ API Reference
    :maxdepth: 3
    :caption: API REFERENCE:
 
-   api_reference
+   api/api_reference
 
 Indices and tables
 ------------------
