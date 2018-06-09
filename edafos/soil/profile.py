@@ -93,7 +93,7 @@ class SoilProfile(Project):
 
     # -- Method to add layers ------------------------------------------------
 
-    def add_layer(self, soil_type, height, tuw, **kwargs):
+    def add_layer(self, soil_type, height, **kwargs):
         """ Method to add a new layer to the soil profile.
 
         .. todo::
@@ -110,12 +110,13 @@ class SoilProfile(Project):
                 - For **SI**: Enter height in **meters**.
                 - For **English**: Enter height in **feet**.
 
+
+        Keyword Args:
             tuw (float): Total unit weight of soil.
 
                 - For **SI**: Enter TUW in **kN/m**\ :sup:`3`.
                 - For **English**: Enter TUW in **lbf/ft**\ :sup:`3`.
 
-        Keyword Args:
             field_n (int): Field SPT-N values.
             corr_n (int): Corrected Field SPT-N values.
 
@@ -145,6 +146,7 @@ class SoilProfile(Project):
                                      "".format(key, allowed_keys))
 
         # Assign values
+        tuw = kwargs.get('tuw', None)
         field_n = kwargs.get('field_n', None)
         corr_n = kwargs.get('corr_n', None)
         field_phi = kwargs.get('field_phi', None)
@@ -157,6 +159,19 @@ class SoilProfile(Project):
         else:
             raise ValueError("Soil type can only be 'cohesive' or "
                              "'cohesionless'.")
+
+        # Check that all inputs are positive numbers
+        for i in [height, tuw, field_n, corr_n, field_phi, calc_phi, su]:
+            if (i is not None) and (type(i) not in [int, float]):
+                raise TypeError("Value '{}' is of type {} and is not "
+                                "permissible. \nEnter only positive numbers "
+                                "(int or float) for soil properties."
+                                "".format(i, type(i)))
+            elif (i is not None) and (i < 0):
+                raise ValueError("Value '{}' is not permissible. Enter positive"
+                                 " numbers only for soil properties.".format(i))
+            else:
+                pass
 
         # Calculate depth from layers heights
         if len(self.layers) == 0:
@@ -215,6 +230,19 @@ class SoilProfile(Project):
             raise ValueError("'{}' entry is invalid. Choose from {}."
                              "".format(kind, allowed))
 
+        # Check that z is within limits
+        max_depth = self.layers['Height'].sum()
+        if z > max_depth:
+            raise ValueError("Depth z = {0} {2}, is beyond the total defined "
+                             "soil profile depth, {1} {2}."
+                             "".format(z, max_depth, self._set_units('length')))
+        elif ((z < 0) and (self.water_table.magnitude >= 0)) \
+                or (z < self.water_table.magnitude < 0):
+            raise ValueError("Nothing but thin air at z = {} {}. Try lower."
+                             "".format(z, self._set_units('length')))
+        else:
+            pass
+
         # Set units for input parameter, z
         z = float(z) * self._set_units('length')
 
@@ -223,11 +251,28 @@ class SoilProfile(Project):
         if zw.magnitude < 0:
             zw = 0 * zw.units
 
-        # Define total stress
+        # Define pore water pressure
+        if self.unit_system == 'SI':
+            gamma_w = 9.81 * self._set_units('tuw')
+        else:
+            gamma_w = 62.4 * self._set_units('tuw')
+        pore_water = zw * gamma_w
+
+        # -- Define total stress ---------------------------------------------
         h1 = self.layers['Height'][1] * self._set_units('length')
         g1 = self.layers['TUW'][1] * self._set_units('tuw')
-        if z < h1:
-            total_stress = z * g1
+
+        # Prepare for Takeaway No 4
+        if (z.magnitude >= 0) and (self.water_table.magnitude < 0):
+            stress_from_water_body = abs(self.water_table) * gamma_w
+        else:
+            stress_from_water_body = 0 * self._set_units('stress')
+
+        # Main if statement
+        if (z.magnitude < 0) and (self.water_table.magnitude < 0):
+            total_stress = pore_water
+        elif z < h1:
+            total_stress = z * g1 + stress_from_water_body
 
         elif z.magnitude in self.layers['Depth'].values:
 
@@ -235,9 +280,10 @@ class SoilProfile(Project):
             ix = self.layers[self.layers['Depth'] == z.magnitude].index[0]
 
             # Multiply and sum the data frame columns of relevant layers
-            total_stress = sum(self.layers['Height'][0:ix] *
-                               self.layers['TUW'][0:ix]
-                               ) * self._set_units('stress')
+            total_stress = (sum(self.layers['Height'][0:ix] *
+                                self.layers['TUW'][0:ix]
+                                ) * self._set_units('stress')
+                            ) + stress_from_water_body
 
         else:
             # Get the previous layer index where z is in
@@ -247,19 +293,13 @@ class SoilProfile(Project):
             ixc = self.layers[self.layers['Depth'] > z.magnitude].index[0]
 
             # Multiply and sum the data frame columns of relevant layers
-            total_stress = (sum(self.layers['Height'][0:ixp] *
-                                self.layers['TUW'][0:ixp]
-                                ) + (
-                                (z.magnitude - self.layers['Depth'][ixp]) *
-                                self.layers['TUW'][ixc])
-                            ) * self._set_units('stress')
-
-        # Define pore water pressure
-        if self.unit_system == 'SI':
-            gamma_w = 9.81 * self._set_units('tuw')
-        else:
-            gamma_w = 62.4 * self._set_units('tuw')
-        pore_water = zw * gamma_w
+            total_stress = ((sum(self.layers['Height'][0:ixp] *
+                                 self.layers['TUW'][0:ixp]
+                                 ) + (
+                                 (z.magnitude - self.layers['Depth'][ixp]) *
+                                 self.layers['TUW'][ixc])
+                             ) * self._set_units('stress')
+                            ) + stress_from_water_body
 
         # Define effective stress
         effective_stress = total_stress - pore_water
