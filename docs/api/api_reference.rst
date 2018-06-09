@@ -18,11 +18,25 @@ from the docstrings in the project source code.
     :undoc-members:
     :show-inheritance:
 
-******************
-``edafos.profile``
-******************
+|
+
+***********************
+``edafos.soil.profile``
+***********************
 
 .. automodule:: edafos.soil.profile
+    :members:
+    :undoc-members:
+    :private-members:
+    :show-inheritance:
+
+|
+
+***************************************
+``edafos.deepfoundations.driven_piles``
+***************************************
+
+.. automodule:: edafos.deepfoundations.driven_piles
     :members:
     :undoc-members:
     :private-members:
