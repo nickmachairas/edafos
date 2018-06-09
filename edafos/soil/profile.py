@@ -4,6 +4,7 @@
 
 # -- Imports -----------------------------------------------------------------
 from edafos.project import Project
+from tabulate import tabulate
 import numpy as np
 import pandas as pd
 import pint
@@ -67,6 +68,8 @@ class SoilProfile(Project):
             'length': {'SI': units.meter, 'English': units.feet},
             'tuw': {'SI': units.kN / units.meter ** 3,
                     'English': units.lbf / units.feet ** 3},
+            'stress': {'SI': units.kN / units.meter ** 2,
+                       'English': units.lbf / units.feet ** 2},
         }
 
         return unit_dict[dim][self.unit_system]
@@ -82,22 +85,8 @@ class SoilProfile(Project):
 
         """
         name_list = ['Soil Type', 'Depth', 'Height', 'TUW', 'Field N',
-                     'Corrected N', 'Field Phi', 'Calc. Phi', 'Shear Strength']
-        unit_list = [
-            '(coh/coless)',                                        # Soil Type
-            '(m)' if self.unit_system == 'SI' else '(ft)',         # Depth
-            '(m)' if self.unit_system == 'SI' else '(ft)',         # Height
-            '(kN/m3)' if self.unit_system == 'SI' else '(lbf/ft3)',  # TUW
-            '(bl/0.3m)' if self.unit_system == 'SI' else '(bpf)',  # Field N
-            '(bl/0.3m)' if self.unit_system == 'SI' else '(bpf)',  # Corrected N
-            '(deg)',                                               # Field Phi
-            '(deg)',                                               # Calc. Phi
-            '(kN/m2)' if self.unit_system == 'SI' else '(lbf/ft2)'  # Shear Su
-        ]
-        arrays = [name_list, unit_list]
-        tuples = list(zip(*arrays))
-        header = pd.MultiIndex.from_tuples(tuples, names=['Property', 'Units'])
-        self.layers = pd.DataFrame(columns=header)
+                     'Corr. N', 'Field Phi', 'Calc. Phi', 'Shear Su']
+        self.layers = pd.DataFrame(columns=name_list)
         self.layers.index.name = 'Layer'
 
         return self
@@ -187,7 +176,8 @@ class SoilProfile(Project):
         # Enforce proper data types
         # TODO: Repeated every time a layer is added. Is there a better way?
         self.layers.fillna(np.nan, inplace=True)
-        for column in self.layers.columns.levels[0]:
+        # for column in self.layers.columns.levels[0]:
+        for column in self.layers.columns:
             if column != 'Soil Type':
                 self.layers[column] = self.layers[column].astype(float)
 
@@ -208,7 +198,7 @@ class SoilProfile(Project):
                 - For **English**: Enter depth, *z*, in **feet**.
 
             kind (str): Parameter that controls the output of the function.
-                Allowed values are ``pore_water``, ``total``, ``effective``
+                Allowed values are ``total``, ``pore_water``, ``effective``
                 and ``all``. The last value, ``all``, returns all three
                 stresses in the same order.
 
@@ -216,6 +206,15 @@ class SoilProfile(Project):
             Quantity: A physical quantity with associated units.
 
         """
+
+        # Check for kind values
+        allowed = ['effective', 'total', 'pore_water', 'all']
+        if kind in allowed:
+            kind = kind
+        else:
+            raise ValueError("'{}' entry is invalid. Choose from {}."
+                             "".format(kind, allowed))
+
         # Set units for input parameter, z
         z = float(z) * self._set_units('length')
 
@@ -225,17 +224,77 @@ class SoilProfile(Project):
             zw = 0 * zw.units
 
         # Define total stress
-        h1 = self.layers['Height'].loc[1].values[0] * self._set_units('length')
-        g1 = self.layers['TUW'].loc[1].values[0] * self._set_units('tuw')
+        h1 = self.layers['Height'][1] * self._set_units('length')
+        g1 = self.layers['TUW'][1] * self._set_units('tuw')
         if z < h1:
             total_stress = z * g1
-        elif z in self.layers['Depth'].values:
-            # This is where you stopped
-        else:
-            total_stress = 0.00000001
 
-        return zw, total_stress
+        elif z.magnitude in self.layers['Depth'].values:
+
+            # Get the layer index where z is at the interface
+            ix = self.layers[self.layers['Depth'] == z.magnitude].index[0]
+
+            # Multiply and sum the data frame columns of relevant layers
+            total_stress = sum(self.layers['Height'][0:ix] *
+                               self.layers['TUW'][0:ix]
+                               ) * self._set_units('stress')
+
+        else:
+            # Get the previous layer index where z is in
+            ixp = self.layers[self.layers['Depth'] < z.magnitude].index[-1]
+
+            # Get the current layer index where z is in
+            ixc = self.layers[self.layers['Depth'] > z.magnitude].index[0]
+
+            # Multiply and sum the data frame columns of relevant layers
+            total_stress = (sum(self.layers['Height'][0:ixp] *
+                                self.layers['TUW'][0:ixp]
+                                ) + (
+                                (z.magnitude - self.layers['Depth'][ixp]) *
+                                self.layers['TUW'][ixc])
+                            ) * self._set_units('stress')
+
+        # Define pore water pressure
+        if self.unit_system == 'SI':
+            gamma_w = 9.81 * self._set_units('tuw')
+        else:
+            gamma_w = 62.4 * self._set_units('tuw')
+        pore_water = zw * gamma_w
+
+        # Define effective stress
+        effective_stress = total_stress - pore_water
+
+        if kind == 'effective':
+            return effective_stress
+        elif kind == 'total':
+            return total_stress
+        elif kind == 'pore_water':
+            return pore_water
+        else:
+            return total_stress, pore_water, effective_stress
 
     def __str__(self):
-        return "Unit system: {0.unit_system}\nDepth to Water Table: " \
-               "{0.water_table}\n\n{0.layers}".format(self)
+
+        layer_tbl = tabulate(self.layers, headers='keys', tablefmt='simple')
+
+        unit_list = [
+            ['Depth', '(m)' if self.unit_system == 'SI' else '(ft)'],
+            ['Height', '(m)' if self.unit_system == 'SI' else '(ft)'],
+            ['TUW', '(kN/m3)' if self.unit_system == 'SI' else '(lbf/ft3)'],
+            ['Field N', '(bl/0.3m)' if self.unit_system == 'SI' else '(bpf)'],
+            ['Corrected N', '(bl/0.3m)' if self.unit_system == 'SI' else
+                '(bpf)'],
+            ['Field Phi', '(deg)'],
+            ['Calculated Phi', '(deg)'],
+            ['Shear Strength', '(kN/m2)' if self.unit_system == 'SI' else
+                '(lbf/ft2)']
+        ]
+        unit_tbl = tabulate(unit_list, tablefmt='plain')
+
+        return "\n" \
+               "Unit System: {0.unit_system}\n" \
+               "Water Table: {0.water_table}\n\n" \
+               "{1}\n\n" \
+               "Units:\n" \
+               "------\n" \
+               "{2}".format(self, layer_tbl, unit_tbl)
