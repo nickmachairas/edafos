@@ -1,5 +1,6 @@
-from edafos.project import Project
+# from edafos.project import Project
 from edafos.soil import SoilProfile
+from edafos.deepfoundations import DrivenPile
 # import pandas as pd
 # from tabulate import tabulate
 
@@ -17,12 +18,19 @@ def olson_009():
         if i == 1:
             mids.append(profile.layers['Height'][i]/2)
         else:
-            mids.append(profile.layers['Depth'][i-1]+profile.layers['Height'][i]/2)
+            mids.append(profile.layers['Depth'][i-1] +
+                        profile.layers['Height'][i]/2)
     print(mids)
     mids = [4.0, 19.25, 35.75, 57.3, 73.6]
     for i in mids:
         res = profile.calculate_stress(i)
         print(i, res)
+
+
+def test_pile():
+    pile = DrivenPile(unit_system='English', pile_type='concrete', diameter=1)
+
+    return pile
 
 
 if __name__ == "__main__":
@@ -40,4 +48,5 @@ if __name__ == "__main__":
     # print(profile1.layers['Depth'].isnull().all().values[0])
     # print(profile1.layers['Field N'].isnull().all().values[0])
     # print(profile1.calculate_stress(6))
-    olson_009()
+    # olson_009()
+    test_pile()

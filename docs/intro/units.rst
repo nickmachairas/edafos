@@ -25,6 +25,10 @@ Input units for geotechnical and foundation attributes.
 +------------------------+----------------+-----------------------+
 | Stresses               | kN/m\ :sup:`2` | kip/ft\ :sup:`2`      |
 +------------------------+----------------+-----------------------+
+| Pile Diameter          | centimeters    | inches                |
++------------------------+----------------+-----------------------+
+| Pile Thickness         | centimeters    | inches                |
++------------------------+----------------+-----------------------+
 
 .. [1] Internally, total unit weight in the English system is converted to
     kip/ft\ :sup:`3`.
