@@ -131,13 +131,13 @@ The same example can be implemented in ``edafos`` as follows.
 
    # Stresses at point A
    total, pore, effective = caseA.calculate_stress(6, kind='all')
-   print("Total Stress: {}\nPore Water Pressure: {}\n"
-         "Effective Stress: {}".format(total, pore, effective))
+   print("Total Stress: {:0.3f}\nPore Water Pressure: {:0.3f}\n"
+         "Effective Stress: {:0.3f}".format(total, pore, effective))
 
    # Stresses at point B
    total, pore, effective = caseA.calculate_stress(14, kind='all')
-   print("Total Stress: {}\nPore Water Pressure: {}\n"
-         "Effective Stress: {}".format(total, pore, effective))
+   print("Total Stress: {:0.3f}\nPore Water Pressure: {:0.3f}\n"
+         "Effective Stress: {:0.3f}".format(total, pore, effective))
 
 |
 
@@ -163,7 +163,7 @@ You can also create a stress distribution plot:
    plt.plot(t, z, label="Total Stress")
    plt.plot(s, z, label="Effective Stress")
    plt.title("Stress Distribution for Case A")
-   plt.xlabel("(lbf/ft2)")
+   plt.xlabel("(kip/ft2)")
    plt.ylabel("Depth (ft)")
    plt.gca().invert_yaxis()
    plt.grid()
@@ -286,13 +286,13 @@ Case B can be implemented in ``edafos`` as follows.
 
    # Stresses at point A
    total, pore, effective = caseB.calculate_stress(6, kind='all')
-   print("Total Stress: {}\nPore Water Pressure: {}\n"
-         "Effective Stress: {}".format(total, pore, effective))
+   print("Total Stress: {:0.3f}\nPore Water Pressure: {:0.3f}\n"
+         "Effective Stress: {:0.3f}".format(total, pore, effective))
 
    # Stresses at point B
    total, pore, effective = caseB.calculate_stress(14, kind='all')
-   print("Total Stress: {}\nPore Water Pressure: {}\n"
-         "Effective Stress: {}".format(total, pore, effective))
+   print("Total Stress: {:0.3f}\nPore Water Pressure: {:0.3f}\n"
+         "Effective Stress: {:0.3f}".format(total, pore, effective))
 
 
 |
@@ -320,7 +320,7 @@ You can also create a stress distribution plot:
    plt.plot(t, z, label="Total Stress")
    plt.plot(s, z, label="Effective Stress")
    plt.title("Stress Distribution for Case B")
-   plt.xlabel("(lbf/ft2)")
+   plt.xlabel("(kip/ft2)")
    plt.ylabel("Depth (ft)")
    plt.gca().invert_yaxis()
    plt.grid()
@@ -412,7 +412,7 @@ above soil grade and point B is at a depth, :math:`z`, of 7-ft below soil grade.
 
 .. math::
 
-   \sigma'_B = \sigma_B - u_B = 1116.8 - 873.6 = 0 \textrm{ psf}
+   \sigma'_B = \sigma_B - u_B = 1116.8 - 873.6 = 243.2 \textrm{ psf}
 
 
 |
@@ -441,13 +441,13 @@ Case C can be implemented in ``edafos`` as follows.
 
    # Stresses at point A
    total, pore, effective = caseC.calculate_stress(-3, kind='all')
-   print("Total Stress: {}\nPore Water Pressure: {}\n"
-         "Effective Stress: {}".format(total, pore, effective))
+   print("Total Stress: {:0.3f}\nPore Water Pressure: {:0.3f}\n"
+         "Effective Stress: {:0.3f}".format(total, pore, effective))
 
    # Stresses at point B
    total, pore, effective = caseC.calculate_stress(7, kind='all')
-   print("Total Stress: {}\nPore Water Pressure: {}\n"
-         "Effective Stress: {}".format(total, pore, effective))
+   print("Total Stress: {:0.3f}\nPore Water Pressure: {:0.3f}\n"
+         "Effective Stress: {:0.3f}".format(total, pore, effective))
 
 
 |
@@ -475,7 +475,7 @@ You can also create a stress distribution plot:
    plt.plot(t, z, label="Total Stress")
    plt.plot(s, z, label="Effective Stress")
    plt.title("Stress Distribution for Case C")
-   plt.xlabel("(lbf/ft2)")
+   plt.xlabel("(kip/ft2)")
    plt.ylabel("Depth (ft)")
    plt.gca().invert_yaxis()
    plt.grid()

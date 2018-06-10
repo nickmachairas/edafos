@@ -7,8 +7,6 @@ from edafos.project import Project
 from tabulate import tabulate
 import numpy as np
 import pandas as pd
-import pint
-units = pint.UnitRegistry()
 
 
 # -- SoilProfile Class -------------------------------------------------------
@@ -20,7 +18,7 @@ class SoilProfile(Project):
 
        Pay attention to the base units for each unit system that you
        choose to use. Refer to the parameter definition below or the
-       :ref:`base_units` page.
+       :ref:`input_units` page.
 
     """
 
@@ -47,32 +45,6 @@ class SoilProfile(Project):
 
         # Call function to instantiate the soil profile data frame
         self._create_profile()
-
-    # -- A Helper Method to set units (Private) ------------------------------
-
-    def _set_units(self, dim):
-        """ A private helper method that returns the Pint units to be attached
-        to a variable based on the set unit system and dimensionality (dim).
-        Since this is a private method, the stored values will not be shown
-        in the docstring. Refer to the `unit_dict` in the code.
-
-        Args:
-            dim (str): The dimensionality for the variable. For example, layer
-                height is 'length'.
-
-        Returns:
-            Pint units.
-
-        """
-        unit_dict = {
-            'length': {'SI': units.meter, 'English': units.feet},
-            'tuw': {'SI': units.kN / units.meter ** 3,
-                    'English': units.lbf / units.feet ** 3},
-            'stress': {'SI': units.kN / units.meter ** 2,
-                       'English': units.lbf / units.feet ** 2},
-        }
-
-        return unit_dict[dim][self.unit_system]
 
     # -- Soil Profile Instantiation Method (Private) -------------------------
 
@@ -280,10 +252,15 @@ class SoilProfile(Project):
             ix = self.layers[self.layers['Depth'] == z.magnitude].index[0]
 
             # Multiply and sum the data frame columns of relevant layers
-            total_stress = (sum(self.layers['Height'][0:ix] *
-                                self.layers['TUW'][0:ix]
-                                ) * self._set_units('stress')
-                            ) + stress_from_water_body
+            # total_stress = (sum(self.layers['Height'][0:ix] *
+            #                     self.layers['TUW'][0:ix]
+            #                     ) * self._set_units('stress')
+            #                 ) + stress_from_water_body
+            total_stress = sum((self.layers['Height'][0:ix].values
+                                * self._set_units('length')) *
+                               (self.layers['TUW'][0:ix].values *
+                                self._set_units('tuw'))
+                               ) + stress_from_water_body
 
         else:
             # Get the previous layer index where z is in
@@ -293,12 +270,23 @@ class SoilProfile(Project):
             ixc = self.layers[self.layers['Depth'] > z.magnitude].index[0]
 
             # Multiply and sum the data frame columns of relevant layers
-            total_stress = ((sum(self.layers['Height'][0:ixp] *
-                                 self.layers['TUW'][0:ixp]
-                                 ) + (
-                                 (z.magnitude - self.layers['Depth'][ixp]) *
-                                 self.layers['TUW'][ixc])
-                             ) * self._set_units('stress')
+            # total_stress = ((sum(self.layers['Height'][0:ixp] *
+            #                      self.layers['TUW'][0:ixp]
+            #                      ) + (
+            #                      (z.magnitude - self.layers['Depth'][ixp]) *
+            #                      self.layers['TUW'][ixc])
+            #                  ) * self._set_units('stress')
+            #                 ) + stress_from_water_body
+            total_stress = (sum((self.layers['Height'][0:ixp].values *
+                                 self._set_units('length')) *
+                                (self.layers['TUW'][0:ixp].values *
+                                 self._set_units('tuw'))
+                                ) + (
+                                ((z.magnitude - self.layers['Depth'][ixp]) *
+                                 self._set_units('length')) *
+                                (self.layers['TUW'][ixc] *
+                                 self._set_units('tuw')))
+
                             ) + stress_from_water_body
 
         # Define effective stress
@@ -312,6 +300,8 @@ class SoilProfile(Project):
             return pore_water
         else:
             return total_stress, pore_water, effective_stress
+
+    # -- Method for string representation ------------------------------------
 
     def __str__(self):
 

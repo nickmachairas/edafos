@@ -8,6 +8,8 @@ actions.
 # -- Imports -----------------------------------------------------------------
 from datetime import datetime
 from random import randint
+import pint
+units = pint.UnitRegistry()
 
 
 # -- Project Class -----------------------------------------------------------
@@ -51,6 +53,34 @@ class Project(object):
         self.project_id = kwargs.get('project_id', randint(10e6, 10e7-1))
         self.project_name = kwargs.get('project_name', 'New Project')
         self.date = kwargs.get('date', datetime.now())
+
+    # -- A Helper Method to set units (Private) ------------------------------
+
+    def _set_units(self, dim):
+        """ A private helper method that returns the Pint units to be attached
+        to a variable based on the set unit system and dimensionality (dim).
+        Since this is a private method, the stored values will not be shown
+        in the docstring. Refer to the `unit_dict` in the code.
+
+        Args:
+            dim (str): The dimensionality for the variable. For example, layer
+                height is 'length'.
+
+        Returns:
+            Pint units.
+
+        """
+        unit_dict = {
+            'length': {'SI': units.meter, 'English': units.feet},
+            'tuw': {'SI': units.kN / units.meter ** 3,
+                    'English': (units.kip/1000) / units.feet ** 3},
+            'stress': {'SI': units.kN / units.meter ** 2,
+                       'English': units.kip / units.feet ** 2},
+        }
+
+        return unit_dict[dim][self.unit_system]
+
+    # -- Method for string representation ------------------------------------
 
     def __str__(self):
         return "Project ID: {0.project_id}\nProject Name: {0.project_name}" \
