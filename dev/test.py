@@ -29,13 +29,15 @@ def olson_009():
 
 def test_pile():
     pile = DrivenPile(unit_system='English',
-                      pile_type='concrete',
-                      shape='circle-closed',
-                      length=2,
+                      pile_type='timber',
+                      shape='HP8X36',
+                      length=10,
                       #side=1,
-                      diameter=1,
+                      diameter=12,
                       #thickness=1,
                       #pen_depth=0.5
+                      nf_zone=2,
+                      taper_dims=[(9, 2), ]
                       )
 
     print(pile)

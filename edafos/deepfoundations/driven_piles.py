@@ -38,14 +38,16 @@ class DrivenPile(Project):
 
                 - ``concrete``: A rectangular (normally square) concrete pile.
                     Requires different keyword arguments depending on ``shape``.
+                    Always requires ``length``.
                 - ``pipe_open``: An open-ended circular steel pipe pile.
-                    Requires keyword arguments ``diameter``, ``thickness``.
+                    Requires keyword arguments ``diameter``, ``thickness``,
+                    ``length``.
                 - ``pipe_closed``: A closed-ended circular steel pipe pile.
-                    Requires keyword argument ``diameter``.
+                    Requires keyword argument ``diameter``, ``length``.
                 - ``h_pile``: An H shape steel beam used as a pile.
-                    Requires keyword argument ``h_type``.
+                    Requires keyword argument ``shape``, ``length``.
                 - ``timber``: A circular timber pile.
-                    Requires keyword argument ``diameter``.
+                    Requires keyword argument ``diameter``, ``length``.
 
         Keyword Args:
             shape (str): Pile shape given pile type. For concrete piles the
@@ -85,6 +87,25 @@ class DrivenPile(Project):
                 - For **SI**: Enter depth in **meters**.
                 - For **English**: Enter depth in **feet**.
 
+            nf_zone (float): :math:`D_{nf}`: No-friction zone; this is the
+                length of a segment measured from ground level where frictional
+                resistance does not contribute to pile capacity.
+
+                - For **SI**: Enter depth in **meters**.
+                - For **English**: Enter depth in **feet**.
+
+            taper_dims (list of tuples): :math:`(d_i,l_i)`: For tapered piles,
+                enter the width of the pile, :math:`d_i`, at a length,
+                :math:`l_i`, measured from the top of the pile. The program
+                allows for multiple tapered sections. Enter as a list, for
+                example: [(12,4), (10,4),]
+
+                - For **SI**: Enter width in **centimeters** and length
+                  in **meters**.
+                - For **English**: Enter width in **inches** and length
+                  in **feet**.
+
+
         """
         super().__init__(unit_system=unit_system)
 
@@ -99,7 +120,7 @@ class DrivenPile(Project):
 
         # Check for valid kwargs
         allowed_keys = ['shape', 'side', 'diameter', 'thickness', 'length',
-                        'pen_depth']
+                        'pen_depth', 'nf_zone', 'taper_dims']
         for key in kwargs:
             if key not in allowed_keys:
                 raise AttributeError("'{}' is not a valid attribute.\nThe "
@@ -113,6 +134,8 @@ class DrivenPile(Project):
         self.thickness = kwargs.get('thickness', None)
         self.length = kwargs.get('length', None)
         self.pen_depth = kwargs.get('pen_depth', self.length)
+        self.nf_zone = kwargs.get('nf_zone', None)
+        self.taper_dims = kwargs.get('taper_dims', None)
 
         # TODO: Fix these checks so they return the missing required attr only
         # TODO: Also throw a warning if additional, unnecessary attr are given
@@ -158,6 +181,8 @@ class DrivenPile(Project):
                               if self.thickness is not None else None)
             self.length = self.length * self._set_units('pile_length')
             self.pen_depth = self.pen_depth * self._set_units('pile_length')
+            self.nf_zone = (self.nf_zone * self._set_units('pile_length')
+                            if self.nf_zone is not None else None)
 
         # Checks for pipe open piles
         elif self.pile_type == 'pipe-open':
@@ -176,6 +201,8 @@ class DrivenPile(Project):
             self.thickness = self.thickness * self._set_units('pile_diameter')
             self.length = self.length * self._set_units('pile_length')
             self.pen_depth = self.pen_depth * self._set_units('pile_length')
+            self.nf_zone = (self.nf_zone * self._set_units('pile_length')
+                            if self.nf_zone is not None else None)
 
         # Checks for pipe closed piles
         elif self.pile_type == 'pipe-closed':
@@ -192,6 +219,8 @@ class DrivenPile(Project):
             self.thickness = None
             self.length = self.length * self._set_units('pile_length')
             self.pen_depth = self.pen_depth * self._set_units('pile_length')
+            self.nf_zone = (self.nf_zone * self._set_units('pile_length')
+                            if self.nf_zone is not None else None)
 
         # Checks for H-Piles
         # TODO: Add logic for custom H-pile shapes
@@ -214,6 +243,14 @@ class DrivenPile(Project):
                         "".format(self.shape, si_hpiles.keys()))
                 else:
                     pass
+            # Fix assignments and units
+            self.side = None
+            self.diameter = None
+            self.thickness = None
+            self.length = self.length * self._set_units('pile_length')
+            self.pen_depth = self.pen_depth * self._set_units('pile_length')
+            self.nf_zone = (self.nf_zone * self._set_units('pile_length')
+                            if self.nf_zone is not None else None)
 
         # Checks for timber piles
         elif self.pile_type == 'timber':
@@ -230,6 +267,8 @@ class DrivenPile(Project):
             self.thickness = None
             self.length = self.length * self._set_units('pile_length')
             self.pen_depth = self.pen_depth * self._set_units('pile_length')
+            self.nf_zone = (self.nf_zone * self._set_units('pile_length')
+                            if self.nf_zone is not None else None)
 
     # -- Method for string representation ------------------------------------
 
@@ -241,4 +280,5 @@ class DrivenPile(Project):
                "Diameter: {0.diameter}\n" \
                "Thickness: {0.thickness}\n" \
                "Total Length: {0.length}\n" \
-               "Penetration Depth: {0.pen_depth}".format(self)
+               "Penetration Depth: {0.pen_depth}\n" \
+               "No-Friction Zone: {0.nf_zone}".format(self)
