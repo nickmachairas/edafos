@@ -37,17 +37,17 @@ class DrivenPile(Project):
             pile_type (str): Type of driven pile. Available options are:
 
                 - ``concrete``: A rectangular (normally square) concrete pile.
-                    Requires different keyword arguments depending on ``shape``.
-                    Always requires ``length``.
+                  Requires different keyword arguments depending on ``shape``.
+                  Always requires ``length``.
                 - ``pipe_open``: An open-ended circular steel pipe pile.
-                    Requires keyword arguments ``diameter``, ``thickness``,
-                    ``length``.
+                  Requires keyword arguments ``diameter``, ``thickness``,
+                  ``length``.
                 - ``pipe_closed``: A closed-ended circular steel pipe pile.
-                    Requires keyword argument ``diameter``, ``length``.
+                  Requires keyword argument ``diameter``, ``length``.
                 - ``h_pile``: An H shape steel beam used as a pile.
-                    Requires keyword argument ``shape``, ``length``.
+                  Requires keyword argument ``shape``, ``length``.
                 - ``timber``: A circular timber pile.
-                    Requires keyword argument ``diameter``, ``length``.
+                  Requires keyword argument ``diameter``, ``length``.
 
         Keyword Args:
             shape (str): Pile shape given pile type. For concrete piles the
@@ -94,22 +94,21 @@ class DrivenPile(Project):
                 - For **SI**: Enter depth in **meters**.
                 - For **English**: Enter depth in **feet**.
 
-            taper_dims (list of tuples): :math:`(d_i,l_i)`: For tapered piles,
+            taper_dims (list of lists): [:math:`d_i,l_i`]: For tapered piles,
                 enter the width of the pile, :math:`d_i`, at a length,
                 :math:`l_i`, measured from the top of the pile. The program
                 allows for multiple tapered sections. Enter as a list, for
-                example: [(12,4), (10,4),]
+                example: [[12,4], [10,4],]
 
                 - For **SI**: Enter width in **centimeters** and length
                   in **meters**.
                 - For **English**: Enter width in **inches** and length
                   in **feet**.
 
-
         """
         super().__init__(unit_system=unit_system)
 
-        # Check for valid pile type
+        # -- Check for valid pile type ---------------------------------------
         allowed_piles = ['concrete', 'pipe-open', 'pipe-closed', 'h-pile',
                          'timber']
         if pile_type in allowed_piles:
@@ -118,7 +117,7 @@ class DrivenPile(Project):
             raise ValueError("'{}' not recognized. Pile type can only be {}."
                              "".format(pile_type, allowed_piles))
 
-        # Check for valid kwargs
+        # -- Check for valid kwargs ------------------------------------------
         allowed_keys = ['shape', 'side', 'diameter', 'thickness', 'length',
                         'pen_depth', 'nf_zone', 'taper_dims']
         for key in kwargs:
@@ -127,7 +126,7 @@ class DrivenPile(Project):
                                      "allowed attributes are: {}"
                                      "".format(key, allowed_keys))
 
-        # Assign values
+        # -- Assign values ---------------------------------------------------
         self.shape = kwargs.get('shape', None)
         self.side = kwargs.get('side', None)
         self.diameter = kwargs.get('diameter', None)
@@ -137,9 +136,24 @@ class DrivenPile(Project):
         self.nf_zone = kwargs.get('nf_zone', None)
         self.taper_dims = kwargs.get('taper_dims', None)
 
+        # -- Reject negative or zero values ----------------------------------
+        for i in [self.side, self.diameter, self.thickness, self.length,
+                  self.pen_depth, self.nf_zone]:
+            if i is None:
+                pass
+            elif type(i) not in [int, float]:
+                raise ValueError("Cannot parse non-numerical pile properties. "
+                                 "Did you enter a string?")
+            try:
+                if i <= 0:
+                    raise ValueError("Cannot parse negative or zero pile "
+                                     "properties.")
+            except TypeError:
+                pass
+
         # TODO: Fix these checks so they return the missing required attr only
         # TODO: Also throw a warning if additional, unnecessary attr are given
-        # Checks for concrete piles
+        # -- Checks for concrete piles ---------------------------------------
         if self.pile_type == 'concrete':
             allowed_shape = ['square-solid', 'square-hollow', 'circle-closed',
                              'circle-open', 'hexagon', 'octagon']
@@ -183,8 +197,59 @@ class DrivenPile(Project):
             self.pen_depth = self.pen_depth * self._set_units('pile_length')
             self.nf_zone = (self.nf_zone * self._set_units('pile_length')
                             if self.nf_zone is not None else None)
+            if self.shape in ['square-solid', 'hexagon', 'octagon']:
+                self.diameter = None
+                self.thickness = None
+            elif self.shape == 'square-hollow':
+                self.thickness = None
+            elif self.shape != 'circle-closed':
+                self.side = None
+                self.thickness = None
+            else:
+                self.side = None
 
-        # Checks for pipe open piles
+            # Check for taper dims diameters
+            if self.taper_dims is None:
+                pass
+            else:
+                if len(self.taper_dims) > 1:
+                    for i, ii in zip(self.taper_dims[:-1], self.taper_dims[1:]):
+                        if ii[0] > i[0]:
+                            raise ValueError("Subsequent taper diameters "
+                                             "cannot be larger than preceding "
+                                             "taper diameters. Please correct.")
+                        else:
+                            pass
+                else:
+                    pass
+                diam_list = []
+                if self.shape in ['circle-closed', 'circle-open']:
+                    for i in self.taper_dims:
+                        if i[0] > self.diameter.magnitude:
+                            raise ValueError("Cannot have taper diameter larger"
+                                             " than top pile diameter.")
+                        else:
+                            diam_list.append(i[0])
+                    if (all(diam_list)) and (diam_list[0] ==
+                                             self.diameter.magnitude):
+                        raise ValueError("This is not a tapered pile. All "
+                                         "tapered diameters are the same and "
+                                         "equal to the top diameter.")
+                else:
+                    for i in self.taper_dims:
+                        if i[0] > self.side.magnitude:
+                            raise ValueError("Cannot have taper diameter larger"
+                                             " than top pile diameter.")
+                        else:
+                            diam_list.append(i[0])
+                            i[0] = i[0] * self._set_units('pile_diameter')
+                    if (all(diam_list)) and (diam_list[0] ==
+                                             self.side.magnitude):
+                        raise ValueError("This is not a tapered pile. All "
+                                         "tapered diameters are the same and "
+                                         "equal to the top diameter.")
+
+        # -- Checks for pipe open piles --------------------------------------
         elif self.pile_type == 'pipe-open':
             if (self.diameter is None) or (self.thickness is None) or \
                     (self.length is None):
@@ -192,6 +257,10 @@ class DrivenPile(Project):
                                  "'{}'.\nEnter values for: ['diameter', "
                                  "'thickness', 'length]."
                                  "".format(self.pile_type))
+            else:
+                pass
+            if self.taper_dims is not None:
+                raise ValueError("Open pipe piles cannot be tapered.")
             else:
                 pass
             # Fix assignments and units
@@ -204,7 +273,7 @@ class DrivenPile(Project):
             self.nf_zone = (self.nf_zone * self._set_units('pile_length')
                             if self.nf_zone is not None else None)
 
-        # Checks for pipe closed piles
+        # -- Checks for pipe closed piles ------------------------------------
         elif self.pile_type == 'pipe-closed':
             if (self.diameter is None) or (self.length is None):
                 raise ValueError("Missing required properties for pile type: "
@@ -221,8 +290,21 @@ class DrivenPile(Project):
             self.pen_depth = self.pen_depth * self._set_units('pile_length')
             self.nf_zone = (self.nf_zone * self._set_units('pile_length')
                             if self.nf_zone is not None else None)
+            diam_list = []
+            for i in self.taper_dims:
+                if i[0] > self.diameter.magnitude:
+                    raise ValueError("Cannot have taper diameter larger"
+                                     " than top pile diameter.")
+                else:
+                    diam_list.append(i[0])
+                    i[0] = i[0] * self._set_units('pile_diameter')
+            if (all(diam_list)) and (diam_list[0] ==
+                                     self.diameter.magnitude):
+                raise ValueError("This is not a tapered pile. All "
+                                 "tapered diameters are the same and "
+                                 "equal to the top diameter.")
 
-        # Checks for H-Piles
+        # -- Checks for H-Piles ----------------------------------------------
         # TODO: Add logic for custom H-pile shapes
         elif self.pile_type == 'h-pile':
             if self.length is None:
@@ -243,6 +325,10 @@ class DrivenPile(Project):
                         "".format(self.shape, si_hpiles.keys()))
                 else:
                     pass
+            if self.taper_dims is not None:
+                raise ValueError("H-Piles cannot be tapered.")
+            else:
+                pass
             # Fix assignments and units
             self.side = None
             self.diameter = None
@@ -252,7 +338,7 @@ class DrivenPile(Project):
             self.nf_zone = (self.nf_zone * self._set_units('pile_length')
                             if self.nf_zone is not None else None)
 
-        # Checks for timber piles
+        # -- Checks for timber piles -----------------------------------------
         elif self.pile_type == 'timber':
             if (self.diameter is None) or (self.length is None):
                 raise ValueError("Missing required properties for pile type: "
@@ -269,6 +355,52 @@ class DrivenPile(Project):
             self.pen_depth = self.pen_depth * self._set_units('pile_length')
             self.nf_zone = (self.nf_zone * self._set_units('pile_length')
                             if self.nf_zone is not None else None)
+            diam_list = []
+            for i in self.taper_dims:
+                if i[0] > self.diameter.magnitude:
+                    raise ValueError("Cannot have taper diameter larger"
+                                     " than top pile diameter.")
+                else:
+                    diam_list.append(i[0])
+                    i[0] = i[0] * self._set_units('pile_diameter')
+
+            if (all(diam_list)) and (diam_list[0] ==
+                                     self.diameter.magnitude):
+                raise ValueError("This is not a tapered pile. All "
+                                 "tapered diameters are the same and "
+                                 "equal to the top diameter.")
+
+        # -- Taper dims checks -----------------------------------------------
+        if self.taper_dims is None:
+            pass
+        else:
+            if type(self.taper_dims) is not list:
+                raise ValueError("Taper dims must be a list of lists.")
+            elif len(self.taper_dims) == 0:
+                raise ValueError("Taper dims list cannot be empty.")
+            else:
+                pass
+
+            taper_length = 0
+            for i in self.taper_dims:
+                if (type(i) is not list) or (len(i) != 2):
+                    raise ValueError("Taper dims must be a list of lists, "
+                                     "i.e. [[d,l],].")
+                elif (type(i[0].magnitude) not in [int, float]) \
+                        or (type(i[1]) not in [int, float]):
+                    raise ValueError("Cannot parse non-numerical taper "
+                                     "dimensions. Did you enter a string?")
+                elif (i[0].magnitude <= 0) or (i[1] <= 0):
+                    raise ValueError("Cannot parse negative or zero taper "
+                                     "dimensions. Please correct.")
+                else:
+                    taper_length = taper_length + i[1]
+                    i[1] = i[1] * self._set_units('pile_length')
+            if taper_length != self.length.magnitude:
+                raise ValueError("Sum of lengths of tapered portions does "
+                                 "not equal total pile length")
+            else:
+                pass
 
     # -- Method for string representation ------------------------------------
 
@@ -281,4 +413,5 @@ class DrivenPile(Project):
                "Thickness: {0.thickness}\n" \
                "Total Length: {0.length}\n" \
                "Penetration Depth: {0.pen_depth}\n" \
-               "No-Friction Zone: {0.nf_zone}".format(self)
+               "No-Friction Zone: {0.nf_zone}\n" \
+               "Taper Dims [[d,l],]: {0.taper_dims}".format(self)
