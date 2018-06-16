@@ -76,6 +76,8 @@ class Project(object):
                     'English': (units.kip/1000) / units.feet ** 3},
             'stress': {'SI': units.kN / units.meter ** 2,
                        'English': units.kip / units.feet ** 2},
+            'pile_diameter': {'SI': units.cm, 'English': units.inches},
+            'pile_length': {'SI': units.meter, 'English': units.feet},
         }
 
         return unit_dict[dim][self.unit_system]

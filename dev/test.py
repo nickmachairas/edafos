@@ -28,9 +28,17 @@ def olson_009():
 
 
 def test_pile():
-    pile = DrivenPile(unit_system='English', pile_type='concrete', diameter=1)
+    pile = DrivenPile(unit_system='English',
+                      pile_type='concrete',
+                      shape='circle-closed',
+                      length=2,
+                      #side=1,
+                      diameter=1,
+                      #thickness=1,
+                      #pen_depth=0.5
+                      )
 
-    return pile
+    print(pile)
 
 
 if __name__ == "__main__":
