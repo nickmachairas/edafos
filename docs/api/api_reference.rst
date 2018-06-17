@@ -32,11 +32,11 @@ from the docstrings in the project source code.
 
 |
 
-***************************************
-``edafos.deepfoundations.driven_piles``
-***************************************
+********************************
+``edafos.deepfoundations.piles``
+********************************
 
-.. automodule:: edafos.deepfoundations.driven_piles
+.. automodule:: edafos.deepfoundations.piles
     :members:
     :undoc-members:
     :private-members:
