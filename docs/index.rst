@@ -81,6 +81,7 @@ Deep Foundations
    :caption: DEEP FOUNDATIONS:
 
    deepfoundations/driven_piles
+   deepfoundations/drilled_piles
 
 
 

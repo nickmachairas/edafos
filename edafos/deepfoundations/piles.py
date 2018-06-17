@@ -6,7 +6,7 @@
 from edafos.project import Project
 from edafos.data import english_hpiles, si_hpiles
 # from tabulate import tabulate
-# import numpy as np
+import numpy as np
 # import pandas as pd
 # import pint
 # units = pint.UnitRegistry()
@@ -202,7 +202,7 @@ class DrivenPile(Project):
                 self.thickness = None
             elif self.shape == 'square-hollow':
                 self.thickness = None
-            elif self.shape != 'circle-closed':
+            elif self.shape == 'circle-closed':
                 self.side = None
                 self.thickness = None
             else:
@@ -230,6 +230,7 @@ class DrivenPile(Project):
                                              " than top pile diameter.")
                         else:
                             diam_list.append(i[0])
+                            i[0] = i[0] * self._set_units('pile_diameter')
                     if (all(diam_list)) and (diam_list[0] ==
                                              self.diameter.magnitude):
                         raise ValueError("This is not a tapered pile. All "
@@ -260,7 +261,8 @@ class DrivenPile(Project):
             else:
                 pass
             if self.taper_dims is not None:
-                raise ValueError("Open pipe piles cannot be tapered.")
+                raise ValueError("Open-ended steel pipe piles cannot be "
+                                 "tapered.")
             else:
                 pass
             # Fix assignments and units
@@ -281,28 +283,20 @@ class DrivenPile(Project):
                                  "'length'].".format(self.pile_type))
             else:
                 pass
+            if self.taper_dims is not None:
+                raise ValueError("Closed-ended steel pipe piles cannot be "
+                                 "tapered.")
+            else:
+                pass
             # Fix assignments and units
             self.shape = 'circular'
             self.side = None
             self.diameter = self.diameter * self._set_units('pile_diameter')
-            self.thickness = None
+            self.thickness = self.thickness * self._set_units('pile_diameter')
             self.length = self.length * self._set_units('pile_length')
             self.pen_depth = self.pen_depth * self._set_units('pile_length')
             self.nf_zone = (self.nf_zone * self._set_units('pile_length')
                             if self.nf_zone is not None else None)
-            diam_list = []
-            for i in self.taper_dims:
-                if i[0] > self.diameter.magnitude:
-                    raise ValueError("Cannot have taper diameter larger"
-                                     " than top pile diameter.")
-                else:
-                    diam_list.append(i[0])
-                    i[0] = i[0] * self._set_units('pile_diameter')
-            if (all(diam_list)) and (diam_list[0] ==
-                                     self.diameter.magnitude):
-                raise ValueError("This is not a tapered pile. All "
-                                 "tapered diameters are the same and "
-                                 "equal to the top diameter.")
 
         # -- Checks for H-Piles ----------------------------------------------
         # TODO: Add logic for custom H-pile shapes
@@ -355,20 +349,34 @@ class DrivenPile(Project):
             self.pen_depth = self.pen_depth * self._set_units('pile_length')
             self.nf_zone = (self.nf_zone * self._set_units('pile_length')
                             if self.nf_zone is not None else None)
-            diam_list = []
-            for i in self.taper_dims:
-                if i[0] > self.diameter.magnitude:
-                    raise ValueError("Cannot have taper diameter larger"
-                                     " than top pile diameter.")
-                else:
-                    diam_list.append(i[0])
-                    i[0] = i[0] * self._set_units('pile_diameter')
 
-            if (all(diam_list)) and (diam_list[0] ==
-                                     self.diameter.magnitude):
-                raise ValueError("This is not a tapered pile. All "
-                                 "tapered diameters are the same and "
-                                 "equal to the top diameter.")
+            # Check for taper dims diameters
+            if self.taper_dims is None:
+                pass
+            else:
+                if len(self.taper_dims) > 1:
+                    for i, ii in zip(self.taper_dims[:-1], self.taper_dims[1:]):
+                        if ii[0] > i[0]:
+                            raise ValueError("Subsequent taper diameters "
+                                             "cannot be larger than preceding "
+                                             "taper diameters. Please correct.")
+                        else:
+                            pass
+                else:
+                    pass
+                diam_list = []
+                for i in self.taper_dims:
+                    if i[0] > self.diameter.magnitude:
+                        raise ValueError("Cannot have taper diameter larger"
+                                         " than top pile diameter.")
+                    else:
+                        diam_list.append(i[0])
+                        i[0] = i[0] * self._set_units('pile_diameter')
+                if (all(diam_list)) and (diam_list[0] ==
+                                         self.diameter.magnitude):
+                    raise ValueError("This is not a tapered pile. All "
+                                     "tapered diameters are the same and "
+                                     "equal to the top diameter.")
 
         # -- Taper dims checks -----------------------------------------------
         if self.taper_dims is None:
@@ -401,6 +409,162 @@ class DrivenPile(Project):
                                  "not equal total pile length")
             else:
                 pass
+
+    # -- Static method for rectangle area ------------------------------------
+    @staticmethod
+    def area_of_shape(ad, shape, t=None):
+        """ Static method that calculates the area of a given pile shape.
+
+        Args:
+            ad (float): Length of side or diameter.
+            shape (str): Pile shape. Options are ``square``, ``hexagon``,
+            ``octagon``, ``circle``, ``ring``.
+            t (float): Thickness of pile wall.
+
+        Returns:
+            float: Area of shape (unitless)
+
+        """
+        allowed = ['square', 'hexagon', 'octagon', 'circle', 'ring']
+        if shape not in allowed:
+            raise ValueError("Shape can be {} only.".format(allowed))
+        else:
+            pass
+
+        if shape == 'square':
+            area = ad ** 2
+        elif shape == 'hexagon':
+            area = (3/2) * np.sqrt(3) * (ad**2)
+        elif shape == 'octagon':
+            area = 2 * (1 + np.sqrt(2)) * (ad**2)
+        elif shape == 'circle':
+            area = np.pi * (ad ** 2) / 4
+        else:
+            area = np.pi * ((ad ** 2) - (ad - 2 * t) ** 2) / 4
+
+        return area
+
+    # -- Private method for pile a/d at z ------------------------------------
+    def _pile_a_d(self, z):
+        """ A private method that returns the side, :math:`a`, or diameter,
+        :math:`d`, of a pile at a depth :math:`z`.
+
+        Args:
+            z (float): Vertical depth to the point of interest, measured from
+                the top of the soil profile.
+
+                - For **SI**: Enter depth, *z*, in **meters**.
+                - For **English**: Enter depth, *z*, in **feet**.
+
+        Returns:
+            Quantity: Side :math:`a`, or diameter, :math:`d`.
+        """
+        z = z * self._set_units('length')
+        # The length x from the top of the pile is defined as
+        x = self.length - self.pen_depth + z
+
+        if self.pile_type == 'concrete':
+            if self.shape in ['square-solid', 'square-hollow', 'hexagon',
+                              'octagon']:
+                if self.taper_dims is None:
+                    di = [self.side.magnitude, self.side.magnitude]
+                    li = [0, self.length.magnitude]
+                else:
+                    di = [self.side.magnitude] + [i[0].magnitude for i in
+                                                  self.taper_dims]
+                    li = [0] + [i[1].magnitude for i in self.taper_dims]
+                    li = np.cumsum(li)
+            else:
+                if self.taper_dims is None:
+                    di = [self.diameter.magnitude, self.diameter.magnitude]
+                    li = [0, self.length.magnitude]
+                else:
+                    di = [self.diameter.magnitude] + [i[0].magnitude for i in
+                                                      self.taper_dims]
+                    li = [0] + [i[1].magnitude for i in self.taper_dims]
+                    li = np.cumsum(li)
+        elif self.pile_type in ['pipe-open', 'pipe-closed']:
+            di = [self.diameter.magnitude, self.diameter.magnitude]
+            li = [0, self.length.magnitude]
+        else:  # Timber piles
+            if self.taper_dims is None:
+                di = [self.diameter.magnitude, self.diameter.magnitude]
+                li = [0, self.length.magnitude]
+            else:
+                di = [self.diameter.magnitude] + [i[0].magnitude for i in
+                                                  self.taper_dims]
+                li = [0] + [i[1].magnitude for i in self.taper_dims]
+                li = np.cumsum(li)
+
+        return np.interp(x.magnitude, li, di) * self._set_units('pile_diameter')
+
+    # -- Method for cross sectional area at z --------------------------------
+    def xsection_area(self, z, soil_plug=False, box_area=False):
+        """ Method that returns the pile cross sectional area at a depth,
+        :math:`z`, from ground surface.
+
+        .. warning::
+
+           This method was made for bearing capacity calculations.
+           As such, it returns the relevant cross sectional area. For example,
+           for steel pipe closed-ended piles, it will return the circle and not
+           the ring area.
+
+        TODO: For concrete square hollow piles it currently returns solid area
+
+        Args:
+            z (float): Vertical depth to the point of interest, measured from
+                the top of the soil profile.
+
+                - For **SI**: Enter depth, *z*, in **meters**.
+                - For **English**: Enter depth, *z*, in **feet**.
+
+            soil_plug (bool): If ``TRUE``, the method returns the full area of
+                open-ended piles.
+
+            box_area (bool): For H-piles, if set to ``TRUE``, the method
+                returns the box area.
+
+        Returns:
+            Quantity: The cross sectional are of the pile w/ units.
+
+        """
+        if self.pile_type == 'concrete':
+            if self.shape in ['square-solid', 'square-hollow']:
+                area = self.area_of_shape(self._pile_a_d(z), 'square')
+            elif self.shape == 'hexagon':
+                area = self.area_of_shape(self._pile_a_d(z), 'hexagon')
+            elif self.shape == 'octagon':
+                area = self.area_of_shape(self._pile_a_d(z), 'octagon')
+            elif self.shape == 'circle-closed':
+                area = self.area_of_shape(self._pile_a_d(z), 'circle')
+            else:
+                if soil_plug:
+                    area = self.area_of_shape(self._pile_a_d(z), 'circle')
+                else:
+                    area = self.area_of_shape(self._pile_a_d(z), 'ring',
+                                              self.thickness)
+
+        elif self.pile_type == 'pipe-open':
+            if soil_plug:
+                area = self.area_of_shape(self._pile_a_d(z), 'circle')
+            else:
+                area = self.area_of_shape(self._pile_a_d(z), 'ring',
+                                          self.thickness)
+
+        elif self.pile_type == 'pipe-closed':
+            area = self.area_of_shape(self._pile_a_d(z), 'circle')
+
+        elif self.pile_type == 'h-pile':
+            if box_area:
+                area = english_hpiles[self.shape]['box_area']
+            else:
+                area = english_hpiles[self.shape]['area']
+
+        else:  # Timber piles
+            area = self.area_of_shape(self._pile_a_d(z), 'circle')
+
+        return area
 
     # -- Method for string representation ------------------------------------
 
