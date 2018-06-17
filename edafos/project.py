@@ -78,6 +78,9 @@ class Project(object):
                        'English': units.kip / units.feet ** 2},
             'pile_diameter': {'SI': units.cm, 'English': units.inches},
             'pile_length': {'SI': units.meter, 'English': units.feet},
+            'pile_xarea': {'SI': units.cm ** 2, 'English': units.inches ** 2},
+            'pile_side_area': {'SI': units.meter ** 2,
+                               'English': units.feet ** 2},
         }
 
         return unit_dict[dim][self.unit_system]
