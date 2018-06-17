@@ -53,6 +53,8 @@ class Project(object):
         self.project_id = kwargs.get('project_id', randint(10e6, 10e7-1))
         self.project_name = kwargs.get('project_name', 'New Project')
         self.date = kwargs.get('date', datetime.now())
+        self.sp = None
+        self.pile = None
 
     # -- A Helper Method to set units (Private) ------------------------------
 
@@ -85,8 +87,77 @@ class Project(object):
 
         return unit_dict[dim][self.unit_system]
 
+    # -- Method to attach a soil profile -------------------------------------
+    def attach_sp(self, obj):
+        """ Method that attaches a ``SoilProfile`` object to the ``Project``
+        object. The ``Project`` class supports adding **one** ``SoilProfile``
+        object. If you run the ``attach_sp`` more than once, it will replace
+        the previous ``SoilProfile`` object.
+
+        Args:
+            obj (class): A :class:`~edafos.soil.profile.SoilProfile` class.
+
+        Returns:
+            self
+        """
+        # Type check
+        if str(type(obj)) == "<class 'edafos.soil.profile.SoilProfile'>":
+            self.sp = obj
+        else:
+            raise TypeError("Wrong input. Attach `SoilProfile` objects only.")
+
+        # Unit system check
+        # TODO: This needs more work for what happens when units are different
+        if self.unit_system != self.sp.unit_system:
+            raise AttributeError("Inconsistent unit systems.")
+        else:
+            pass
+
+        return self
+
+    # -- Method to attach a pile ---------------------------------------------
+    def attach_pile(self, obj):
+        """ Method that attaches a ``Pile`` object to the ``Project`` object.
+        The ``Project`` class supports adding **one** ``Pile`` object. If you
+        run the ``attach_pile`` more than once, it will replace the previous
+        ``Pile`` object.
+
+        Args:
+            obj (class): A :class:`~edafos.deepfoundations.piles.Pile` class.
+
+        Returns:
+            self
+        """
+        # Type check
+        if str(type(obj)) == "<class 'edafos.deepfoundations.piles.Pile'>":
+            self.pile = obj
+        else:
+            raise TypeError("Wrong input. Attach `Pile` objects only.")
+
+        # Unit system check
+        # TODO: This needs more work for what happens when units are different
+        if self.unit_system != self.pile.unit_system:
+            raise AttributeError("Inconsistent unit systems.")
+        else:
+            pass
+
+        # Check if the pile is longer than the soil profile
+        if self.sp is None:
+            pass
+        else:
+            if self.sp.layers['Depth'].max() < self.pile.pen_depth.magnitude:
+                raise ValueError("Pile penetration depth is larger than "
+                                 "total soil profile depth.")
+            else:
+                pass
+
+        return self
+
     # -- Method for string representation ------------------------------------
 
     def __str__(self):
         return "Project ID: {0.project_id}\nProject Name: {0.project_name}" \
-               "\nDatetime: {0.date}\nUnit System: {0.unit_system}".format(self)
+               "\nDatetime: {0.date}\nUnit System: {0.unit_system}\n" \
+               "{1}\n" \
+               "Soil Profile WT: {0.sp.water_table}\n" \
+               "Pile Type: {0.pile.pile_type}".format(self, 12*'-')

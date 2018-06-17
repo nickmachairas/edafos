@@ -1,4 +1,4 @@
-# from edafos.project import Project
+from edafos.project import Project
 from edafos.soil import SoilProfile
 from edafos.deepfoundations import Pile
 # import pandas as pd
@@ -46,6 +46,42 @@ def test_pile():
     print(pile.side_area(0, 10))
 
 
+def example1():
+    # Create the project object
+    project = Project(unit_system='English', project_name='Example 1')
+
+    # Create the soil profile object
+    profile = SoilProfile(unit_system='English', water_table=10)
+    profile.add_layer(soil_type='cohesionless',
+                      height=40,
+                      tuw=100,
+                      field_phi=35,
+                      corr_n=20)
+
+    # Attach the soil profile to the project
+    project.attach_sp(profile)
+
+    # Create a pile
+    pile = Pile(unit_system='English',
+                pile_type='pipe-closed',
+                length=32,
+                pen_depth=30,
+                diameter=14,
+                thickness=0.75,
+                )
+
+    # Attach the pile to the project
+    project.attach_pile(pile)
+
+    # Why not get the effective stress at say 15-ft??...
+    project.sp.calculate_stress(15)
+
+    print(project)
+    # print("*************")
+    # print(profile)
+    print(project.sp.calculate_stress(15))
+
+
 if __name__ == "__main__":
     # project1 = Project(unit_system='English')
     # print(project1)
@@ -62,4 +98,5 @@ if __name__ == "__main__":
     # print(profile1.layers['Field N'].isnull().all().values[0])
     # print(profile1.calculate_stress(6))
     # olson_009()
-    test_pile()
+    # test_pile()
+    example1()
