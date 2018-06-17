@@ -1,6 +1,6 @@
 # from edafos.project import Project
 from edafos.soil import SoilProfile
-from edafos.deepfoundations import DrivenPile
+from edafos.deepfoundations import Pile
 # import pandas as pd
 # from tabulate import tabulate
 
@@ -28,20 +28,22 @@ def olson_009():
 
 
 def test_pile():
-    pile = DrivenPile(unit_system='English',
-                      pile_type='concrete',
-                      shape='square-solid',
-                      length=10,
-                      side=12,
-                      diameter=12,
-                      thickness=1,
-                      pen_depth=0.5,
-                      nf_zone=2,
-                      taper_dims=[[10, 10], ],
-                      #taper_dims=[[10, 5], [10, 5], ]
-                      )
+    pile = Pile(unit_system='English',
+                pile_type='cast-in-place',
+                shape='HP8X36',
+                length=10,
+                side=12,
+                diameter=12,
+                thickness=1,
+                # pen_depth=15,
+                nf_zone=2,
+                # taper_dims=[[6, 10], ],
+                # taper_dims=[[10, 5], [8, 5], ]
+                )
 
     print(pile)
+    print(pile.xsection_area(10))
+    print(pile.side_area(0, 10))
 
 
 if __name__ == "__main__":

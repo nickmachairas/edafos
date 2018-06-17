@@ -1,4 +1,4 @@
-""" Provide the ``DrivenPiles`` class.
+""" Provide the ``Pile`` class.
 
 """
 
@@ -14,8 +14,8 @@ import numpy as np
 
 # -- SoilProfile Class -------------------------------------------------------
 
-class DrivenPile(Project):
-    """ Class to represent a new driven pile.
+class Pile(Project):
+    """ Class to represent a new driven or drilled pile.
 
     .. warning::
 
@@ -47,6 +47,8 @@ class DrivenPile(Project):
                 - ``h_pile``: An H shape steel beam used as a pile.
                   Requires keyword argument ``shape``, ``length``.
                 - ``timber``: A circular timber pile.
+                  Requires keyword argument ``diameter``, ``length``.
+                - ``cast-in-place``: A concrete cast-in-place pile.
                   Requires keyword argument ``diameter``, ``length``.
 
         Keyword Args:
@@ -110,7 +112,7 @@ class DrivenPile(Project):
 
         # -- Check for valid pile type ---------------------------------------
         allowed_piles = ['concrete', 'pipe-open', 'pipe-closed', 'h-pile',
-                         'timber']
+                         'timber', 'cast-in-place']
         if pile_type in allowed_piles:
             self.pile_type = pile_type
         else:
@@ -332,8 +334,9 @@ class DrivenPile(Project):
             self.nf_zone = (self.nf_zone * self._set_units('pile_length')
                             if self.nf_zone is not None else None)
 
-        # -- Checks for timber piles -----------------------------------------
-        elif self.pile_type == 'timber':
+        # -- Checks for timber and cast-in-place piles -----------------------
+        # TODO: Most likely cast-in-place will have their own checks
+        elif self.pile_type in ['timber', 'cast-in-place']:
             if (self.diameter is None) or (self.length is None):
                 raise ValueError("Missing required properties for pile type: "
                                  "'{}'.\nEnter values for: ['diameter', "
@@ -377,6 +380,8 @@ class DrivenPile(Project):
                     raise ValueError("This is not a tapered pile. All "
                                      "tapered diameters are the same and "
                                      "equal to the top diameter.")
+        else:
+            pass
 
         # -- Taper dims checks -----------------------------------------------
         if self.taper_dims is None:
@@ -412,20 +417,24 @@ class DrivenPile(Project):
 
     # -- Static method for rectangle area ------------------------------------
     @staticmethod
-    def area_of_shape(ad, shape, t=None):
-        """ Static method that calculates the area of a given pile shape.
+    def area_of_shape(ad, shape, t=None, ad2=None, h=None):
+        """ Static method that calculates the area of a given shape.
 
         Args:
             ad (float): Length of side or diameter.
-            shape (str): Pile shape. Options are ``square``, ``hexagon``,
-            ``octagon``, ``circle``, ``ring``.
+            shape (str): Options are ``square``, ``hexagon``, ``octagon``,
+                ``circle``, ``ring``, ``trapezoid``, ``cone``.
             t (float): Thickness of pile wall.
+            ad2 (float): Additional length of side or diameter to obtain
+                side area.
+            h (float): Segment height to obtain side area.
 
         Returns:
             float: Area of shape (unitless)
 
         """
-        allowed = ['square', 'hexagon', 'octagon', 'circle', 'ring']
+        allowed = ['square', 'hexagon', 'octagon', 'circle', 'ring',
+                   'trapezoid', 'cone']
         if shape not in allowed:
             raise ValueError("Shape can be {} only.".format(allowed))
         else:
@@ -439,8 +448,13 @@ class DrivenPile(Project):
             area = 2 * (1 + np.sqrt(2)) * (ad**2)
         elif shape == 'circle':
             area = np.pi * (ad ** 2) / 4
-        else:
+        elif shape == 'ring':
             area = np.pi * ((ad ** 2) - (ad - 2 * t) ** 2) / 4
+        elif shape == 'trapezoid':
+            area = ((ad + ad2) / 2) * h
+        else:  # Cone -- http://mathworld.wolfram.com/ConicalFrustum.html
+            s = np.sqrt((((ad - ad2)/2) ** 2) + (h ** 2))
+            area = np.pi * ((ad + ad2)/2) * s
 
         return area
 
@@ -486,7 +500,7 @@ class DrivenPile(Project):
         elif self.pile_type in ['pipe-open', 'pipe-closed']:
             di = [self.diameter.magnitude, self.diameter.magnitude]
             li = [0, self.length.magnitude]
-        else:  # Timber piles
+        else:  # Timber and cast-in-place piles
             if self.taper_dims is None:
                 di = [self.diameter.magnitude, self.diameter.magnitude]
                 li = [0, self.length.magnitude]
@@ -526,10 +540,20 @@ class DrivenPile(Project):
                 returns the box area.
 
         Returns:
-            Quantity: The cross sectional are of the pile w/ units.
+            Quantity: The cross sectional area of the pile w/ units.
 
         """
-        if self.pile_type == 'concrete':
+        if z < 0:
+            raise ValueError("Depth z cannot be negative here.")
+        else:
+            pass
+
+        # The length x from the top of the pile is defined as
+        x = self.length.magnitude - self.pen_depth.magnitude + z
+
+        if (x < 0) or (x > self.length.magnitude):
+            area = 0 * self._set_units('pile_xarea')
+        elif self.pile_type == 'concrete':
             if self.shape in ['square-solid', 'square-hollow']:
                 area = self.area_of_shape(self._pile_a_d(z), 'square')
             elif self.shape == 'hexagon':
@@ -538,7 +562,7 @@ class DrivenPile(Project):
                 area = self.area_of_shape(self._pile_a_d(z), 'octagon')
             elif self.shape == 'circle-closed':
                 area = self.area_of_shape(self._pile_a_d(z), 'circle')
-            else:
+            else:  # circle-open
                 if soil_plug:
                     area = self.area_of_shape(self._pile_a_d(z), 'circle')
                 else:
@@ -557,14 +581,93 @@ class DrivenPile(Project):
 
         elif self.pile_type == 'h-pile':
             if box_area:
-                area = english_hpiles[self.shape]['box_area']
+                area = english_hpiles[self.shape]['box_area'] \
+                       * self._set_units('pile_xarea')
             else:
-                area = english_hpiles[self.shape]['area']
+                area = english_hpiles[self.shape]['area'] \
+                       * self._set_units('pile_xarea')
 
-        else:  # Timber piles
+        else:  # Timber and cast-in-place piles
             area = self.area_of_shape(self._pile_a_d(z), 'circle')
 
         return area
+
+    # -- Method for side area between z1, z2 ---------------------------------
+    def side_area(self, z1, z2, box_area=False):
+        """ Method that returns the side area for a section of the pile defined
+        by z1 and z2.
+
+        Args:
+            z1 (float): Vertical depth to the highest point of interest,
+                measured from the top of the soil profile.
+
+                - For **SI**: Enter depth, *z1*, in **meters**.
+                - For **English**: Enter depth, *z1*, in **feet**.
+
+            z2 (float): Vertical depth to the lowest point of interest,
+                measured from the top of the soil profile.
+
+                - For **SI**: Enter depth, *z1*, in **meters**.
+                - For **English**: Enter depth, *z1*, in **feet**.
+
+            box_area (bool): For H-piles, if set to ``TRUE``, the method
+                returns the box area.
+
+        Returns:
+            Quantity: The side area of the pile w/ units between z1 and z2.
+        """
+        if (z1 < 0) or (z2 < 0):
+            raise ValueError("Depth z cannot be negative here.")
+        elif z2 <= z1:
+            raise ValueError("z2 must be larger than z1")
+        else:
+            pass
+
+        # The length x from the top of the pile is defined as
+        x1 = self.length.magnitude - self.pen_depth.magnitude + z1
+        x2 = self.length.magnitude - self.pen_depth.magnitude + z2
+
+        h = (z2 - z1) * self._set_units('pile_length')
+
+        # TODO: Give these limits another thought, maybe not return zero.
+        if (x1 < 0) or (x1 > self.length.magnitude) or (x2 < 0) or \
+                (x2 > self.length.magnitude):
+            area = 0 * self._set_units('pile_xarea')
+        elif self.pile_type == 'concrete':
+            if self.shape in ['square-solid', 'square-hollow']:
+                area = 4 * self.area_of_shape(ad=self._pile_a_d(z1),
+                                              shape='trapezoid',
+                                              ad2=self._pile_a_d(z2), h=h)
+            elif self.shape == 'hexagon':
+                area = 6 * self.area_of_shape(ad=self._pile_a_d(z1),
+                                              shape='trapezoid',
+                                              ad2=self._pile_a_d(z2), h=h)
+            elif self.shape == 'octagon':
+                area = 6 * self.area_of_shape(ad=self._pile_a_d(z1),
+                                              shape='trapezoid',
+                                              ad2=self._pile_a_d(z2), h=h)
+            else:  # circle-closed and circle-open
+                area = self.area_of_shape(ad=self._pile_a_d(z1),
+                                          shape='cone',
+                                          ad2=self._pile_a_d(z2), h=h)
+
+        elif self.pile_type in ['pipe-open', 'pipe-closed']:
+            area = self.area_of_shape(ad=self._pile_a_d(z1), shape='cone',
+                                      ad2=self._pile_a_d(z2), h=h)
+        # TODO: adjust to accept si piles as well
+        elif self.pile_type == 'h-pile':
+            if box_area:
+                area = (english_hpiles[self.shape]['box_perimeter']
+                        * self._set_units('pile_diameter')) * h
+            else:
+                area = (english_hpiles[self.shape]['perimeter']
+                        * self._set_units('pile_diameter')) * h
+
+        else:  # Timber and cast-in-place piles
+            area = self.area_of_shape(ad=self._pile_a_d(z1), shape='cone',
+                                      ad2=self._pile_a_d(z2), h=h)
+
+        return area.to(self._set_units('pile_side_area'))
 
     # -- Method for string representation ------------------------------------
 
