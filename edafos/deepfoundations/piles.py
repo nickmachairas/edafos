@@ -5,11 +5,7 @@
 # -- Imports -----------------------------------------------------------------
 from edafos.project import Project
 from edafos.data import english_hpiles, si_hpiles
-# from tabulate import tabulate
 import numpy as np
-# import pandas as pd
-# import pint
-# units = pint.UnitRegistry()
 
 
 # -- SoilProfile Class -------------------------------------------------------
@@ -279,10 +275,12 @@ class Pile(Project):
 
         # -- Checks for pipe closed piles ------------------------------------
         elif self.pile_type == 'pipe-closed':
-            if (self.diameter is None) or (self.length is None):
+            if (self.diameter is None) or (self.length is None) \
+                    or (self.thickness is None):
                 raise ValueError("Missing required properties for pile type: "
                                  "'{}'.\nEnter values for: ['diameter', "
-                                 "'length'].".format(self.pile_type))
+                                 "'thickness', 'length']."
+                                 "".format(self.pile_type))
             else:
                 pass
             if self.taper_dims is not None:
