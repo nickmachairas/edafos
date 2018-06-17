@@ -24,6 +24,41 @@ of concrete driven piles.
    Driven concrete pile sections and nomenclature.
 
 
+****************
+Steel Pipe Piles
+****************
+
+:numref:`driven_pipe_piles` shows the available sections and nomenclature
+of driven steel pipe piles.
+
+
+.. _driven_pipe_piles:
+.. figure:: ../_static/figures/driven_pipe_piles.png
+   :alt: _driven_pipe_piles.png
+   :align: center
+   :width: 525px
+
+   Driven steel pipe pile sections and nomenclature.
+
+
+
+************
+Timber Piles
+************
+
+:numref:`driven_timber_piles` shows the available sections and nomenclature
+of driven timber piles.
+
+
+.. _driven_timber_piles:
+.. figure:: ../_static/figures/driven_timber_piles.png
+   :alt: _driven_timber_piles.png
+   :align: center
+   :width: 525px
+
+   Driven timber pile section and nomenclature.
+
+
 
 
 *******
