@@ -21,13 +21,13 @@ sys.path.insert(0, os.path.abspath('../'))
 # -- Project information -----------------------------------------------------
 
 project = 'edafos'
-copyright = '2018, Nick Machairas'
+copyright = '2018, Nick Machairas @ NYU Geo'
 author = 'Nick Machairas'
 
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '0.1.0'
+release = '0.1.0beta'
 
 
 # -- General configuration ---------------------------------------------------
@@ -130,7 +130,7 @@ html_sidebars = {
     '**': [
         # 'about.html',
         'globaltoc.html',
-        'localtoc.html',
+        # 'localtoc.html',
         # 'navigation.html',
         'relations.html',  # needs 'show_related': True theme option to display
         'sourcelink.html',
