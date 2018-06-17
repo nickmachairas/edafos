@@ -41,3 +41,15 @@ from the docstrings in the project source code.
     :undoc-members:
     :private-members:
     :show-inheritance:
+
+|
+
+******************************
+``edafos.deepfoundations.api``
+******************************
+
+.. automodule:: edafos.deepfoundations.api
+    :members:
+    :undoc-members:
+    :private-members:
+    :show-inheritance:
