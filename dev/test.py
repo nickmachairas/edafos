@@ -78,8 +78,8 @@ def example1():
 
     print(project)
     # print("*************")
-    # print(profile)
-    print(project.sp.calculate_stress(15))
+    print(profile)
+    # print(project.sp.calculate_stress(15))
 
 
 if __name__ == "__main__":

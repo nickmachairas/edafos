@@ -1,8 +1,8 @@
 .. _pile-capacity:
 
-#####################
-Capacity Calculations
-#####################
+##########################
+Pile Capacity Calculations
+##########################
 
 The following examples detail the steps required to run pile capacity
 calculations in ``edafos``.

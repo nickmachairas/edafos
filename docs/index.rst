@@ -80,8 +80,8 @@ Deep Foundations
    :maxdepth: 3
    :caption: DEEP FOUNDATIONS:
 
-   deepfoundations/driven_piles
-   deepfoundations/drilled_piles
+   deepfoundations/types_o_piles
+   deepfoundations/capacity
 
 
 
