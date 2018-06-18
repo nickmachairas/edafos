@@ -153,6 +153,31 @@ class Project(object):
 
         return self
 
+    # -- Method for list of relevant z's -------------------------------------
+
+    def z_layer_pile(self):
+        """ Method that analyzes the defined soil layers, water table, pile
+        tapered sections (if any) and produces a list of depths, :math:`z`,
+        where there is a change in soil conditions or pile properties.
+
+        Returns:
+            list: A list of depths, :math:`z` (unitless).
+        """
+        # Check if SoilProfile and Pile are attached
+        if (self.sp is None) or (self.pile is None):
+            raise ValueError("No SoilProfile or Pile attached to Project.")
+        else:
+            pass
+
+        # Compile list
+        z_list = (self.sp.z_of_layers() + self.pile.z_of_pile()
+                  + [self.sp.water_table.magnitude])
+        # Remove duplicates and sort
+        z_list = list(set(z_list))
+        z_list.sort()
+
+        return z_list
+
     # -- Method for string representation ------------------------------------
 
     def __str__(self):

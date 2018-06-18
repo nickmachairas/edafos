@@ -57,17 +57,30 @@ def example1():
                       tuw=100,
                       field_phi=35,
                       corr_n=20)
+    profile.add_layer(soil_type='cohesionless',
+                      height=20,
+                      tuw=100,
+                      field_phi=35,
+                      corr_n=20)
+    profile.add_layer(soil_type='cohesionless',
+                      height=30,
+                      tuw=100,
+                      field_phi=35,
+                      corr_n=20)
 
     # Attach the soil profile to the project
     project.attach_sp(profile)
 
     # Create a pile
     pile = Pile(unit_system='English',
-                pile_type='pipe-closed',
+                pile_type='concrete',
+                shape='square-solid',
                 length=32,
-                pen_depth=30,
+                side=14,
+                #pen_depth=30,
                 diameter=14,
                 thickness=0.75,
+                taper_dims=[[12, 32]]
                 )
 
     # Attach the pile to the project
@@ -76,10 +89,12 @@ def example1():
     # Why not get the effective stress at say 15-ft??...
     project.sp.calculate_stress(15)
 
-    print(project)
+    # print(project)
     # print("*************")
-    print(profile)
+    # print(profile)
     # print(project.sp.calculate_stress(15))
+    # print(project.sp.z_of_layers())
+    print(project.z_layer_pile())
 
 
 if __name__ == "__main__":

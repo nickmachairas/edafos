@@ -229,8 +229,8 @@ class Pile(Project):
                         else:
                             diam_list.append(i[0])
                             i[0] = i[0] * self._set_units('pile_diameter')
-                    if (all(diam_list)) and (diam_list[0] ==
-                                             self.diameter.magnitude):
+                    if (len(set(diam_list)) == 1) and (diam_list[0] ==
+                                                       self.diameter.magnitude):
                         raise ValueError("This is not a tapered pile. All "
                                          "tapered diameters are the same and "
                                          "equal to the top diameter.")
@@ -242,8 +242,8 @@ class Pile(Project):
                         else:
                             diam_list.append(i[0])
                             i[0] = i[0] * self._set_units('pile_diameter')
-                    if (all(diam_list)) and (diam_list[0] ==
-                                             self.side.magnitude):
+                    if (len(set(diam_list)) == 1) and (diam_list[0] ==
+                                                       self.side.magnitude):
                         raise ValueError("This is not a tapered pile. All "
                                          "tapered diameters are the same and "
                                          "equal to the top diameter.")
@@ -373,8 +373,8 @@ class Pile(Project):
                     else:
                         diam_list.append(i[0])
                         i[0] = i[0] * self._set_units('pile_diameter')
-                if (all(diam_list)) and (diam_list[0] ==
-                                         self.diameter.magnitude):
+                if (len(set(diam_list)) == 1) and (diam_list[0] ==
+                                                   self.diameter.magnitude):
                     raise ValueError("This is not a tapered pile. All "
                                      "tapered diameters are the same and "
                                      "equal to the top diameter.")
@@ -414,6 +414,7 @@ class Pile(Project):
                 pass
 
     # -- Static method for rectangle area ------------------------------------
+
     @staticmethod
     def area_of_shape(ad, shape, t=None, ad2=None, h=None):
         """ Static method that calculates the area of a given shape.
@@ -457,6 +458,7 @@ class Pile(Project):
         return area
 
     # -- Private method for pile a/d at z ------------------------------------
+
     def _pile_a_d(self, z):
         """ A private method that returns the side, :math:`a`, or diameter,
         :math:`d`, of a pile at a depth :math:`z`.
@@ -511,6 +513,7 @@ class Pile(Project):
         return np.interp(x.magnitude, li, di) * self._set_units('pile_diameter')
 
     # -- Method for cross sectional area at z --------------------------------
+
     def xsection_area(self, z, soil_plug=False, box_area=False):
         """ Method that returns the pile cross sectional area at a depth,
         :math:`z`, from ground surface.
@@ -591,6 +594,7 @@ class Pile(Project):
         return area
 
     # -- Method for side area between z1, z2 ---------------------------------
+
     def side_area(self, z1, z2, box_area=False):
         """ Method that returns the side area for a section of the pile defined
         by z1 and z2.
@@ -666,6 +670,49 @@ class Pile(Project):
                                       ad2=self._pile_a_d(z2), h=h)
 
         return area.to(self._set_units('pile_side_area'))
+
+    # -- Method that returns list of relevant z's ----------------------------
+
+    def z_of_pile(self):
+        """ Method that returns a list of depths, :math:`z`, for the pile that
+        correspond to the top of the pile (if below ground), the tip of the
+        pile and inflection points if tapered.
+
+        The assumption here is that :math:`z = x - L_t + D_p`, where :math:`x`
+        is a point along the length of the pile. Therefore, for :math:`x = 0`
+        we get the depth :math:`z_{pile.top}` at the top of the pile (if
+        :math:`D_p > L_t`) and for :math:`x = L_t`, we get the depth
+        :math:`z_{pile.toe}` at the toe (aka tip) of the pile. If the pile is
+        tapered, :math:`x` along inflection points will produce the
+        corresponding :math:`z`.
+
+        Returns:
+            A list of depths, :math:`z` (unitless).
+        """
+        z_list = []
+        # Get z_pile-top if Dp > Lt
+        if self.pen_depth.magnitude > self.length.magnitude:
+            z = self.pen_depth.magnitude - self.length.magnitude
+            z_list.append(z)
+        else:
+            pass
+        # Get the remaining z's
+        if self.taper_dims is None:
+            z = self.pen_depth.magnitude
+            z_list.append(z)
+        else:
+            taper_l = []
+            for i in self.taper_dims:
+                taper_l.append(i[1].magnitude)
+            taper_l = np.cumsum(taper_l)
+            for ii in taper_l:
+                z = ii - self.length.magnitude + self.pen_depth.magnitude
+                if z > 0:
+                    z_list.append(z)
+                else:
+                    pass
+
+        return z_list
 
     # -- Method for string representation ------------------------------------
 

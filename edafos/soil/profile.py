@@ -170,6 +170,44 @@ class SoilProfile(Project):
 
         return self
 
+    # -- Method that returns list of relevant z's ----------------------------
+
+    def z_of_layers(self, loc='bot'):
+        """ Method that returns a list of depths, :math:`z`, for the defined
+        soil profile layers. The depths selected are at the layer interface and
+        at layer midpoint. The method returns a list with either or all points
+        based on the input of the ``loc`` argument. This list can be used for
+        effective stress calculations.
+
+        Args:
+            loc (str): Controls the selection of points. Available options are
+                ``bot`` (for bottom of layer), ``mid`` (for layer midpoint) or
+                ``all``.
+
+        Returns:
+            list: A list of depths, :math:`z` (unitless).
+        """
+        # Check that the input is valid
+        allowed = ['bot', 'mid', 'all']
+        if loc not in allowed:
+            raise ValueError("'{}' is not a valid input. Available options are "
+                             "{}.".format(loc, allowed))
+        else:
+            pass
+
+        bot_list = self.layers['Depth'].values
+        mid_list = bot_list - self.layers['Height'].values / 2
+
+        if loc == 'bot':
+            z_list = [0] + bot_list.tolist()
+        elif loc == 'mid':
+            z_list = [0] + mid_list.tolist()
+        else:
+            z_list = [0] + bot_list.tolist() + mid_list.tolist()
+            z_list.sort()
+
+        return z_list
+
     # -- Method to calculate stresses ----------------------------------------
 
     def calculate_stress(self, z, kind='effective'):
