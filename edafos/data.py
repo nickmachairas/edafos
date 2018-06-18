@@ -120,3 +120,238 @@ english_hpiles = {
 si_hpiles = {
     # TODO: Add SI H-Pile details
 }
+
+# -- API Guidelines for Shaft and Toe Resistance -----------------------------
+api_data = {
+    'very_loose': {
+        'Ncor': '0 - 4',  # bpf
+        'delta': 15,      # deg
+        'f_lim': 1.0,     # ksf
+        'N_q': 8,
+        'q_lim': 40,      # ksf
+    },
+    'loose': {
+        'Ncor': '5 - 10',
+        'delta': 20,
+        'f_lim': 1.4,
+        'N_q': 12,
+        'q_lim': 60,
+    },
+    'medium': {
+        'Ncor': '11 - 30',
+        'delta': 25,
+        'f_lim': 1.7,
+        'N_q': 20,
+        'q_lim': 100,
+    },
+    'dense': {
+        'Ncor': '31 - 50',
+        'delta': 30,
+        'f_lim': 2.0,
+        'N_q': 40,
+        'q_lim': 200,
+    },
+    'very_dense': {
+        'Ncor': 'over 50',
+        'delta': 35,
+        'f_lim': 2.4,
+        'N_q': 50,
+        'q_lim': 250,
+    },
+}
+
+# -- Olson 90 Guidelines for Shaft and Toe Resistance ------------------------
+olson90_data = {
+    'GRAV': {
+        'very_loose': {
+            'Ncor': '0 - 4',
+            'delta': 20,
+            'f_lim': 1.4,
+            'N_q': 12,
+            'q_lim': 60,
+        },
+        'loose': {
+            'Ncor': '5 - 10',
+            'delta': 25,
+            'f_lim': 1.7,
+            'N_q': 20,
+            'q_lim': 100,
+        },
+        'medium': {
+            'Ncor': '11 - 30',
+            'delta': 30,
+            'f_lim': 2.0,
+            'N_q': 40,
+            'q_lim': 200,
+        },
+        'dense': {
+            'Ncor': 'over 30',
+            'delta': 35,
+            'f_lim': 2.4,
+            'N_q': 60,
+            'q_lim': 250,
+        },
+    },
+    'SAGV': {
+        'very_loose': {
+            'Ncor': '0 - 4',
+            'delta': 20,
+            'f_lim': 1.4,
+            'N_q': 12,
+            'q_lim': 60,
+        },
+        'loose': {
+            'Ncor': '5 - 10',
+            'delta': 25,
+            'f_lim': 1.7,
+            'N_q': 20,
+            'q_lim': 100,
+        },
+        'medium': {
+            'Ncor': '11 - 30',
+            'delta': 30,
+            'f_lim': 2.0,
+            'N_q': 40,
+            'q_lim': 200,
+        },
+        'dense': {
+            'Ncor': 'over 30',
+            'delta': 35,
+            'f_lim': 2.4,
+            'N_q': 60,
+            'q_lim': 250,
+        },
+    },
+    'SAND': {
+        'very_loose': {
+            'Ncor': '0 - 4',
+            'delta': 20,
+            'f_lim': 1.0,
+            'N_q': 50,
+            'q_lim': 40,
+        },
+        'loose': {
+            'Ncor': '5 - 10',
+            'delta': 30,
+            'f_lim': 1.1,
+            'N_q': 120,
+            'q_lim': 120,
+        },
+        'medium': {
+            'Ncor': '11 - 30',
+            'delta': 35,
+            'f_lim': 1.9,
+            'N_q': 120,
+            'q_lim': 190,
+        },
+        'dense': {
+            'Ncor': '31 - 50',
+            'delta': 40,
+            'f_lim': 2.6,
+            'N_q': 120,
+            'q_lim': 190,
+        },
+        'very_dense': {
+            'Ncor': '51 - 100',
+            'delta': 40,
+            'f_lim': 3.7,
+            'N_q': 130,
+            'q_lim': 200,
+        },
+        'very_dense+': {
+            'Ncor': 'over 100',
+            'delta': 40,
+            'f_lim': 3.8,
+            'N_q': 220,
+            'q_lim': 530,
+        },
+    },
+    'SASI': {
+        'very_loose': {
+            'Ncor': '0 - 4',
+            'delta': 10,
+            'f_lim': 1.0,
+            'N_q': 10,
+            'q_lim': 10,
+        },
+        'loose': {
+            'Ncor': '5 - 10',
+            'delta': 10,
+            'f_lim': 1.0,
+            'N_q': 20,
+            'q_lim': 40,
+        },
+        'medium': {
+            'Ncor': '11 - 30',
+            'delta': 15,
+            'f_lim': 1.4,
+            'N_q': 50,
+            'q_lim': 110,
+        },
+        'dense': {
+            'Ncor': '31 - 50',
+            'delta': 20,
+            'f_lim': 2.0,
+            'N_q': 100,
+            'q_lim': 160,
+        },
+        'very_dense': {
+            'Ncor': '51 - 100',
+            'delta': 30,
+            'f_lim': 2.0,
+            'N_q': 100,
+            'q_lim': 200,
+        },
+        'very_dense+': {
+            'Ncor': '101 - 200',
+            'delta': 34,
+            'f_lim': 20,
+            'N_q': 100,
+            'q_lim': 200,
+        },
+        'very_dense++': {
+            'Ncor': 'over 200',
+            'delta': 40,
+            'f_lim': 20,
+            'N_q': 100,
+            'q_lim': 200,
+        },
+    },
+    'SILT': {
+        'very_loose': {
+            'Ncor': '0 - 4',
+            'delta': 10,
+            'f_lim': 1.0,
+            'N_q': 10,
+            'q_lim': 40,
+        },
+        'loose': {
+            'Ncor': '5 - 10',
+            'delta': 15,
+            'f_lim': 1.0,
+            'N_q': 10,
+            'q_lim': 40,
+        },
+        'medium': {
+            'Ncor': '11 - 30',
+            'delta': 20,
+            'f_lim': 1.4,
+            'N_q': 10,
+            'q_lim': 40,
+        },
+        'dense': {
+            'Ncor': '31 - 50',
+            'delta': 20,
+            'f_lim': 1.4,
+            'N_q': 12,
+            'q_lim': 60,
+        },
+        'very_dense': {
+            'Ncor': 'over 50',
+            'delta': 25,
+            'f_lim': 1.4,
+            'N_q': 12,
+            'q_lim': 60,
+        },
+    },
+}

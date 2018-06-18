@@ -1,15 +1,21 @@
+
+##############
+Types of Piles
+##############
+
+
 .. _driven-piles:
 
-############
+************
 Driven Piles
-############
+************
 
 Let's talk about driven piles...
 
 
-**************
+
 Concrete Piles
-**************
+==============
 
 :numref:`driven_concrete_piles` shows the available sections and nomenclature
 of concrete driven piles.
@@ -24,9 +30,9 @@ of concrete driven piles.
    Driven concrete pile sections and nomenclature.
 
 
-****************
+
 Steel Pipe Piles
-****************
+================
 
 :numref:`driven_pipe_piles` shows the available sections and nomenclature
 of driven steel pipe piles.
@@ -42,9 +48,9 @@ of driven steel pipe piles.
 
 
 
-************
+
 Timber Piles
-************
+============
 
 :numref:`driven_timber_piles` shows the available sections and nomenclature
 of driven timber piles.
@@ -61,9 +67,9 @@ of driven timber piles.
 
 
 
-*******
+
 H-Piles
-*******
+=======
 
 Section details of English H-Piles are given in :numref:`english_hpile_table`.
 
@@ -111,4 +117,31 @@ Section details of English H-Piles are given in :numref:`english_hpile_table`.
    +----------+--------------+-----------+-------+---------------+-------------+--------------+---------------+
    | HP8x36   | 10.6         | 47.77     | 8.02  | 0.445         | 8.155       | 65.40        | 32.35         |
    +----------+--------------+-----------+-------+---------------+-------------+--------------+---------------+
+
+|
+
+.. _drilled-piles:
+
+*************
+Drilled Piles
+*************
+
+Drilled piles...
+
+
+
+Cast-in-place Concrete Piles
+============================
+
+:numref:`drilled_cipc_piles` shows the available sections and nomenclature
+of concrete cast-in-place piles.
+
+
+.. _drilled_cipc_piles:
+.. figure:: ../_static/figures/drilled_cipc_piles.png
+   :alt: drilled_cipc_piles.png
+   :align: center
+   :width: 525px
+
+   Driven concrete pile sections and nomenclature.
 
