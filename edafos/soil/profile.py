@@ -56,6 +56,7 @@ class SoilProfile(Project):
             names and another for the column units.
 
         """
+        # Careful when changing column named. Update API.get_soil_prop
         name_list = ['Soil Type', 'Depth', 'Height', 'TUW', 'Field N',
                      'Corr. N', 'Field Phi', 'Calc. Phi', 'Shear Su']
         self.layers = pd.DataFrame(columns=name_list)
@@ -109,6 +110,7 @@ class SoilProfile(Project):
         """
 
         # Check for valid attributes
+        # If you update these keys, make sure to update API.get_soil_prop too
         allowed_keys = ['soil_type', 'height', 'tuw', 'field_n', 'corr_n',
                         'field_phi', 'calc_phi', 'su']
         for key in kwargs:
