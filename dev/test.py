@@ -106,6 +106,58 @@ def example1():
     # print(api.get_soil_prop(40, 'su'))
 
 
+def reese102():
+    # Create the project object
+    project = Project(unit_system='SI', project_name='Reese Problem 10.2')
+
+    # Create the soil profile object
+    profile = SoilProfile(unit_system='SI', water_table=40)
+    profile.add_layer(soil_type='cohesive',
+                      height=4,
+                      tuw=19,
+                      su=9.8)
+    profile.add_layer(soil_type='cohesive',
+                      height=6,
+                      tuw=9,
+                      su=9.8)
+    profile.add_layer(soil_type='cohesive',
+                      height=10,
+                      tuw=9,
+                      su=19.6)
+    profile.add_layer(soil_type='cohesive',
+                      height=16,
+                      tuw=9,
+                      su=58.8)
+    profile.add_layer(soil_type='cohesive',
+                      height=4,
+                      tuw=9,
+                      su=78.4)
+
+    # Attach the soil profile to the project
+    project.attach_sp(profile)
+
+    # Create a pile
+    pile = Pile(unit_system='SI',
+                pile_type='pipe-open',
+                length=39,
+                diameter=50,
+                thickness=1)
+
+    # Attach the pile to the project
+    project.attach_pile(pile)
+
+    # Start a pile capacity analysis
+    api = API(project)
+
+    sigma = api.project.sp.calculate_stress(2)
+    su = api.project.sp.get_soil_prop(2, 'su')
+    a = api.a_factor_rev_api(sigma, su)
+    fs = api.unit_shaft_res_clay(a, su)
+    a_s = api.project.pile.side_area(0, 4)
+    print(a)
+    print(fs * a_s)
+
+
 if __name__ == "__main__":
     # project1 = Project(unit_system='English')
     # print(project1)
@@ -123,4 +175,5 @@ if __name__ == "__main__":
     # print(profile1.calculate_stress(6))
     # olson_009()
     # test_pile()
-    example1()
+    # example1()
+    reese102()
