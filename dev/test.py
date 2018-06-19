@@ -1,6 +1,6 @@
 from edafos.project import Project
 from edafos.soil import SoilProfile
-from edafos.deepfoundations import Pile
+from edafos.deepfoundations import Pile, API
 # import pandas as pd
 # from tabulate import tabulate
 
@@ -75,12 +75,12 @@ def example1():
     pile = Pile(unit_system='English',
                 pile_type='concrete',
                 shape='square-solid',
-                length=32,
+                length=32.99,
                 side=14,
                 #pen_depth=30,
                 diameter=14,
                 thickness=0.75,
-                taper_dims=[[12, 32]]
+                #taper_dims=[[12, 32]]
                 )
 
     # Attach the pile to the project
@@ -89,12 +89,17 @@ def example1():
     # Why not get the effective stress at say 15-ft??...
     project.sp.calculate_stress(15)
 
+    # Start a pile capacity analysis
+    api = API(project)
+
     # print(project)
     # print("*************")
     # print(profile)
     # print(project.sp.calculate_stress(15))
     # print(project.sp.z_of_layers())
-    print(project.z_layer_pile())
+    # print(project.z_layer_pile())
+    # print(api._z_analysis())
+    print(api.get_soil_prop(40, 'su'))
 
 
 if __name__ == "__main__":
