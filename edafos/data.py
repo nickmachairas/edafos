@@ -162,7 +162,7 @@ api_data = {
 
 # -- Olson 90 Guidelines for Shaft and Toe Resistance ------------------------
 olson90_data = {
-    'GRAV': {
+    'gravel': {
         'very_loose': {
             'Ncor': '0 - 4',
             'delta': 20,
@@ -192,7 +192,7 @@ olson90_data = {
             'q_lim': 250,
         },
     },
-    'SAGV': {
+    'sand-gravel': {
         'very_loose': {
             'Ncor': '0 - 4',
             'delta': 20,
@@ -222,7 +222,7 @@ olson90_data = {
             'q_lim': 250,
         },
     },
-    'SAND': {
+    'sand': {
         'very_loose': {
             'Ncor': '0 - 4',
             'delta': 20,
@@ -266,7 +266,7 @@ olson90_data = {
             'q_lim': 530,
         },
     },
-    'SASI': {
+    'sand-silt': {
         'very_loose': {
             'Ncor': '0 - 4',
             'delta': 10,
@@ -317,7 +317,7 @@ olson90_data = {
             'q_lim': 200,
         },
     },
-    'SILT': {
+    'silt': {
         'very_loose': {
             'Ncor': '0 - 4',
             'delta': 10,
