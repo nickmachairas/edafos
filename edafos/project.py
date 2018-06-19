@@ -73,6 +73,7 @@ class Project(object):
 
         """
         unit_dict = {
+            'degrees': {'SI': units.degree, 'English': units.degree},
             'length': {'SI': units.meter, 'English': units.feet},
             'tuw': {'SI': units.kN / units.meter ** 3,
                     'English': (units.kip/1000) / units.feet ** 3},
