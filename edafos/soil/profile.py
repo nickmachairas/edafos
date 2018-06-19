@@ -57,8 +57,8 @@ class SoilProfile(Project):
 
         """
         # Careful when changing column named. Update API.get_soil_prop
-        name_list = ['Soil Type', 'Depth', 'Height', 'TUW', 'Field N',
-                     'Corr. N', 'Field Phi', 'Calc. Phi', 'Shear Su']
+        name_list = ['Soil Type', 'Soil Desc', 'Depth', 'Height', 'TUW',
+                     'Field N', 'Corr. N', 'Field Phi', 'Calc. Phi', 'Shear Su']
         self.layers = pd.DataFrame(columns=name_list)
         self.layers.index.name = 'Layer'
 
@@ -85,6 +85,12 @@ class SoilProfile(Project):
 
 
         Keyword Args:
+            soil_desc (str): Soil description. Initially created to accommodate
+                the :ref:`olson90-method`. As such, in order to follow the
+                guidelines in :numref:`Olson90_table`, the only valid inputs
+                are: ``gravel``, ``sand-gravel``, ``sand``, ``sand-silt``,
+                ``silt``. TODO: There is no check to reject these inputs for
+                ``soil_type = 'cohesive'``, although they have no effect.
             tuw (float): Total unit weight of soil.
 
                 - For **SI**: Enter TUW in **kN/m**\ :sup:`3`.
@@ -111,8 +117,8 @@ class SoilProfile(Project):
 
         # Check for valid attributes
         # If you update these keys, make sure to update API.get_soil_prop too
-        allowed_keys = ['soil_type', 'height', 'tuw', 'field_n', 'corr_n',
-                        'field_phi', 'calc_phi', 'su']
+        allowed_keys = ['soil_type', 'soil_desc', 'height', 'tuw', 'field_n',
+                        'corr_n', 'field_phi', 'calc_phi', 'su']
         for key in kwargs:
             if key not in allowed_keys:
                 raise AttributeError("'{}' is not a valid attribute. The "
@@ -120,6 +126,7 @@ class SoilProfile(Project):
                                      "".format(key, allowed_keys))
 
         # Assign values
+        soil_desc = kwargs.get('soil_desc', None)
         tuw = kwargs.get('tuw', None)
         field_n = kwargs.get('field_n', None)
         corr_n = kwargs.get('corr_n', None)
@@ -133,6 +140,13 @@ class SoilProfile(Project):
         else:
             raise ValueError("Soil type can only be 'cohesive' or "
                              "'cohesionless'.")
+        # Check for soil description
+        allowed_soil_desc = ['gravel', 'sand-gravel', 'sand', 'sand-silt',
+                             'silt']
+        if (soil_desc is not None) and (soil_desc not in allowed_soil_desc):
+            raise ValueError("'{}' is not a valid soil description input.\n"
+                             "Valid inputs are: {}."
+                             "".format(soil_desc, allowed_soil_desc))
 
         # Check that all inputs are positive numbers
         for i in [height, tuw, field_n, corr_n, field_phi, calc_phi, su]:
@@ -155,8 +169,8 @@ class SoilProfile(Project):
 
         # Store values in data frame
         self.layers.loc[len(self.layers)+1] = [
-            soil_type, depth, height, tuw, field_n, corr_n, field_phi,
-            calc_phi, su]
+            soil_type, soil_desc, depth, height, tuw, field_n, corr_n,
+            field_phi, calc_phi, su]
 
         # Reset index to start at 1
         if self.layers.index[0] == 0:
@@ -167,7 +181,7 @@ class SoilProfile(Project):
         self.layers.fillna(np.nan, inplace=True)
         # for column in self.layers.columns.levels[0]:
         for column in self.layers.columns:
-            if column != 'Soil Type':
+            if column not in ['Soil Type', 'Soil Desc']:
                 self.layers[column] = self.layers[column].astype(float)
 
         return self
