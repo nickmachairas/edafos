@@ -9,8 +9,8 @@ from .capacity_base import CapacityMethod
 # -- API Class ---------------------------------------------------------------
 
 class API(CapacityMethod):
-    """ Class to represent the API method for capacity calculations of driven
-    or drilled piles.
+    """ Class to represent the Revised API method for capacity calculations of
+    driven or drilled piles.
 
     """
 

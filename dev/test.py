@@ -53,20 +53,24 @@ def example1():
     # Create the soil profile object
     profile = SoilProfile(unit_system='English', water_table=10)
     profile.add_layer(soil_type='cohesionless',
+                      soil_desc='sand',
                       height=40,
                       tuw=100,
                       field_phi=35,
                       corr_n=20)
     profile.add_layer(soil_type='cohesionless',
+                      soil_desc='sand',
                       height=20,
                       tuw=100,
                       field_phi=35,
                       corr_n=20)
     profile.add_layer(soil_type='cohesionless',
+                      #soil_desc='sand',
                       height=30,
                       tuw=100,
                       field_phi=35,
-                      corr_n=20)
+                      corr_n=20
+                      )
 
     # Attach the soil profile to the project
     project.attach_sp(profile)
@@ -98,8 +102,8 @@ def example1():
     # print(project.sp.calculate_stress(15))
     # print(project.sp.z_of_layers())
     # print(project.z_layer_pile())
-    # print(api._z_analysis())
-    print(api.get_soil_prop(40, 'su'))
+    # print(api._z_for_analysis())
+    # print(api.get_soil_prop(40, 'su'))
 
 
 if __name__ == "__main__":
