@@ -16,6 +16,33 @@ API Method
 American Petroleum Institute (API).
 
 
+.. admonition:: Required Properties
+
+   :Pile:
+
+      - :math:`\alpha` or :math:`d`: side length or diameter for surface
+        area, :math:`A_s` (shaft resistance)
+      - :math:`\alpha` or :math:`d` (:math:`t`): side
+        length or diameter (with thickness for open ended) for toe area,
+        :math:`A_p, A_{pp}` (toe resistance)
+      - pile type: open-ended or closed-ended for :math:`K` selection
+        (cohesionless soils)
+
+   :Soil:
+
+      - type: cohesive/cohesionless classification
+      - :math:`\gamma`: total unit weight for effective stress calculations
+      - :math:`s_u`: undrained shear strength (cohesive soils)
+      - :math:`N_{cor}`: SPT-N corrected to select :math:`\delta`,
+        :math:`f_{s.lim}`, :math:`N_q`, :math:`q_{s.lim}` (cohesionless soils)
+
+   **Note**: ``edafos`` runs a pre-check to verify that all required properties
+   have been defined prior to running the capacity calculations. Refer to the
+   :meth:`~edafos.deepfoundations.capacity_base.CapacityMethod._pre_check`
+   method for more information.
+
+
+
 Cohesive Soils
 ==============
 
@@ -256,6 +283,34 @@ Olson 90 Method
 
 The Olson 90 method is for cohesionless soils only. It was created from a
 database of 31 load tests on steel pipe piles.
+
+
+.. admonition:: Required Properties
+
+   :Pile:
+
+      - :math:`\alpha` or :math:`d`: side length or diameter for surface
+        area, :math:`A_s` (shaft resistance)
+      - :math:`\alpha` or :math:`d` (:math:`t`): side
+        length or diameter (with thickness for open ended) for toe area,
+        :math:`A_p, A_{pp}` (toe resistance)
+      - pile type: open-ended or closed-ended for :math:`K` selection
+        (cohesionless soils)
+
+   :Soil:
+
+      - type: cohesive/cohesionless classification
+      - :math:`\gamma`: total unit weight for effective stress calculations
+      - :math:`s_u`: undrained shear strength (cohesive soils)
+      - desc, :math:`N_{cor}`: soil description and SPT-N corrected to select
+        :math:`\delta`, :math:`f_{s.lim}`, :math:`N_q`, :math:`q_{s.lim}`
+        (cohesionless soils)
+
+   **Note**: ``edafos`` runs a pre-check to verify that all required properties
+   have been defined prior to running the capacity calculations. Refer to the
+   :meth:`~edafos.deepfoundations.capacity_base.CapacityMethod._pre_check`
+   method for more information.
+
 
 
 Cohesionless Soils
