@@ -75,11 +75,11 @@ where:
 
 
 The :math:`\alpha` factor is calculated based on the conditional in equation
-:eq:`a-api-clay`.
+:eq:`a-rev-api-clay`.
 
 
 .. math::
-   :label: a-api-clay
+   :label: a-rev-api-clay
 
    \alpha = \begin{cases}
    0.5\psi^{-0.5} & \textrm{if} \quad \psi \leq 1.0 \\
