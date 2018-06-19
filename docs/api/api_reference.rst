@@ -44,11 +44,23 @@ from the docstrings in the project source code.
 
 |
 
-******************************
-``edafos.deepfoundations.api``
-******************************
+****************************************
+``edafos.deepfoundations.capacity_base``
+****************************************
 
-.. automodule:: edafos.deepfoundations.api
+.. automodule:: edafos.deepfoundations.capacity_base
+    :members:
+    :undoc-members:
+    :private-members:
+    :show-inheritance:
+
+|
+
+***************************************
+``edafos.deepfoundations.capacity_api``
+***************************************
+
+.. automodule:: edafos.deepfoundations.capacity_api
     :members:
     :undoc-members:
     :private-members:
