@@ -595,7 +595,7 @@ class Pile(Project):
 
     # -- Method for side area between z1, z2 ---------------------------------
 
-    def side_area(self, z1, z2, box_area=False):
+    def side_area(self, z1, z2, box_area=False, inside=False):
         """ Method that returns the side area for a section of the pile defined
         by z1 and z2.
 
@@ -614,6 +614,9 @@ class Pile(Project):
 
             box_area (bool): For H-piles, if set to ``TRUE``, the method
                 returns the box area.
+
+            inside (bool): For open steel pipe piles only. If TRUE, it returns
+                the inside area of the pile for plugged calculations.
 
         Returns:
             Quantity: The side area of the pile w/ units between z1 and z2.
@@ -654,8 +657,19 @@ class Pile(Project):
                                           ad2=self._pile_a_d(z2), h=h)
 
         elif self.pile_type in ['pipe-open', 'pipe-closed']:
-            area = self.area_of_shape(ad=self._pile_a_d(z1), shape='cone',
-                                      ad2=self._pile_a_d(z2), h=h)
+            if (self.pile_type == 'pipe-open') and inside:
+                t = self.thickness.magnitude
+                area = self.area_of_shape(ad=(self._pile_a_d(z1) - 2*t *
+                                              self._set_units('pile_diameter')
+                                              ),
+                                          shape='cone',
+                                          ad2=(self._pile_a_d(z2) - 2*t *
+                                               self._set_units('pile_diameter')
+                                               ),
+                                          h=h)
+            else:
+                area = self.area_of_shape(ad=self._pile_a_d(z1), shape='cone',
+                                          ad2=self._pile_a_d(z2), h=h)
         # TODO: adjust to accept si piles as well
         elif self.pile_type == 'h-pile':
             if box_area:
