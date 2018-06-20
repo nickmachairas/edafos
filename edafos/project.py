@@ -79,6 +79,7 @@ class Project(object):
                     'English': (units.kip/1000) / units.feet ** 3},
             'stress': {'SI': units.kN / units.meter ** 2,
                        'English': units.kip / units.feet ** 2},
+            'capacity': {'SI': units.kN, 'English': units.kip},
             'pile_diameter': {'SI': units.cm, 'English': units.inches},
             'pile_length': {'SI': units.meter, 'English': units.feet},
             'pile_xarea': {'SI': units.cm ** 2, 'English': units.inches ** 2},
