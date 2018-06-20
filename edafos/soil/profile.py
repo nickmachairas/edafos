@@ -388,8 +388,8 @@ class SoilProfile(Project):
             raise ValueError("z cannot be larger than max soil profile depth.")
 
         # Input check
-        allowed = ['soil_type', 'height', 'tuw', 'field_n', 'corr_n',
-                   'field_phi', 'calc_phi', 'su']
+        allowed = ['soil_type', 'soil_desc', 'height', 'tuw', 'field_n',
+                   'corr_n', 'field_phi', 'calc_phi', 'su']
         if sp not in allowed:
             raise ValueError("'{}' is not a valid input. Allowed inputs are {}"
                              ".".format(sp, allowed))
@@ -399,6 +399,8 @@ class SoilProfile(Project):
 
         if sp == 'soil_type':
             value = df['Soil Type'][index]
+        elif sp == 'soil_desc':
+            value = df['Soil Desc'][index]
         elif sp == 'height':
             value = df['Height'][index] * self._set_units('length')
         elif sp == 'tuw':
