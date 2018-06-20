@@ -65,7 +65,7 @@ def example1():
                       field_phi=35,
                       corr_n=20)
     profile.add_layer(soil_type='cohesionless',
-                      #soil_desc='sand',
+                      # soil_desc='sand',
                       height=30,
                       tuw=100,
                       field_phi=35,
@@ -81,10 +81,10 @@ def example1():
                 shape='square-solid',
                 length=32.99,
                 side=14,
-                #pen_depth=30,
+                # pen_depth=30,
                 diameter=14,
                 thickness=0.75,
-                #taper_dims=[[12, 32]]
+                # taper_dims=[[12, 32]]
                 )
 
     # Attach the pile to the project
@@ -139,7 +139,7 @@ def reese102():
     # Create a pile
     pile = Pile(unit_system='SI',
                 pile_type='pipe-open',
-                length=39,
+                length=40,
                 diameter=50,
                 thickness=1)
 
@@ -149,13 +149,44 @@ def reese102():
     # Start a pile capacity analysis
     api = API(project)
 
-    sigma = api.project.sp.calculate_stress(2)
-    su = api.project.sp.get_soil_prop(2, 'su')
-    a = api.a_factor_rev_api(sigma, su)
-    fs = api.unit_shaft_res_clay(a, su)
-    a_s = api.project.pile.side_area(0, 4)
-    print(a)
-    print(fs * a_s)
+    # sigma = api.project.sp.calculate_stress(2)
+    # su = api.project.sp.get_soil_prop(2, 'su')
+    # a = api.a_factor_rev_api(sigma, su)
+    # fs = api.unit_shaft_res_clay(a, su)
+    # a_s = api.project.pile.side_area(0, 4)
+    # print(a)
+    # print(fs * a_s)
+    # print(api.average_toe_su())
+    print(api.run())
+
+
+def olson90_example():
+    # Create the project object
+    project = Project(unit_system='English', project_name='Olson 90 Example')
+
+    # Create the soil profile object
+    profile = SoilProfile(unit_system='English', water_table=10)
+    profile.add_layer(soil_type='cohesionless',
+                      soil_desc='sand',
+                      height=40,
+                      tuw=100,
+                      corr_n=20)
+    # Attach the soil profile to the project
+    project.attach_sp(profile)
+
+    # Create a pile
+    pile = Pile(unit_system='English',
+                pile_type='pipe-closed',
+                length=30,
+                diameter=14,
+                thickness=0.75)
+
+    # Attach the pile to the project
+    project.attach_pile(pile)
+
+    # Start a pile capacity analysis
+    api = API(project)
+    print(api.capacity)
 
 
 if __name__ == "__main__":
@@ -176,4 +207,5 @@ if __name__ == "__main__":
     # olson_009()
     # test_pile()
     # example1()
-    reese102()
+    # reese102()
+    olson90_example()
