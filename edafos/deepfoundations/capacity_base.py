@@ -257,7 +257,7 @@ class CapacityMethod(object):
         if pile_side is None:
             if self.project.pile.pile_type == 'h-pile':
                 d = english_hpiles[pile_shape]['flange_width']
-                two_d_z = toe_z + 2 * d
+                two_d_z = toe_z + 2 * d * (self.project._set_units('pile_diameter'))
             else:
                 two_d_z = toe_z + 2 * pile_diameter
         else:
