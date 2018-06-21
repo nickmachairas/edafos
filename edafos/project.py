@@ -171,9 +171,13 @@ class Project(object):
         else:
             pass
 
+        # Fix for negative water table (offshore)
+        wt = self.sp.water_table.magnitude
+        if wt < 0:
+            wt = 0
+
         # Compile list
-        z_list = (self.sp.z_of_layers() + self.pile.z_of_pile()
-                  + [self.sp.water_table.magnitude])
+        z_list = self.sp.z_of_layers() + self.pile.z_of_pile() + [wt]
         # Remove duplicates and sort
         z_list = list(set(z_list))
         z_list.sort()
