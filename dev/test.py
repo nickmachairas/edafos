@@ -27,6 +27,23 @@ def olson_009():
         print(i, res)
 
 
+def olson_010():
+    profile = SoilProfile(unit_system='English', water_table=5)
+    profile.add_layer(soil_type='cohesive', height=8, tuw=108)
+    profile.add_layer(soil_type='cohesive', height=18, tuw=111)
+    profile.add_layer(soil_type='cohesionless', height=3.5, tuw=125)
+    profile.add_layer(soil_type='cohesive', height=35.5, tuw=110)
+    profile.add_layer(soil_type='cohesive', height=3.5, tuw=126)
+    profile.add_layer(soil_type='cohesionless', height=6.0, tuw=131)
+    profile.add_layer(soil_type='cohesive', height=4.5, tuw=113)
+    profile.add_layer(soil_type='cohesionless', height=10.0, tuw=113)
+
+    mids = [4, 17, 27.75, 47.25, 66.75, 71.5, 76.75, 84]
+    for i in mids:
+        res = profile.calculate_stress(i)
+        print(i, res)
+
+
 def test_pile():
     pile = Pile(unit_system='English',
                 pile_type='cast-in-place',
@@ -157,7 +174,7 @@ def reese102():
     # print(a)
     # print(fs * a_s)
     # print(api.average_toe_su())
-    print(api.run())
+    print(api.capacity)
 
 
 def olson90_example():
@@ -204,8 +221,8 @@ if __name__ == "__main__":
     # print(profile1.layers['Depth'].isnull().all().values[0])
     # print(profile1.layers['Field N'].isnull().all().values[0])
     # print(profile1.calculate_stress(6))
-    # olson_009()
+    olson_010()
     # test_pile()
     # example1()
     # reese102()
-    olson90_example()
+    # olson90_example()
