@@ -286,24 +286,71 @@ class CapacityMethod(object):
     # -- Method for unit shaft resistance (cohesionless) ---------------------
     @staticmethod
     def unit_shaft_res_sand(k, sigma, delta):
-        """ TODO: add...
+        """ Method for unit shaft resistance in cohesionless soils, defined by
+        equation :eq:`f_s-api-sand`.
+
+        Args:
+            k (float): Coefficient of lateral earth, :math:`K`. For Revised API
+                locate the value in :numref:`API_K_table`. For Olson 90, is it
+                calculated with equation :eq:`olson90-K`.
+            sigma (float): Average effective stress (at midpoint),
+                :math:`\\bar{\\sigma'}`.
+
+                - For **SI**: Enter :math:`\\bar{\\sigma'}`
+                  in **kN/m**\ :sup:`2`.
+                - For **English**: Enter :math:`\\bar{\\sigma'}` in
+                  **kip/ft**\ :sup:`2`.
+
+            delta (float): Friction angle between the soil and the pile wall,
+                :math:`\\delta`. For Revised API, locate :math:`\\delta` in
+                :numref:`API_d_q_SPT_table`. For Olson 90, locate
+                :math:`\\delta` in :numref:`Olson90_table`.
 
         Returns:
+            Quantity: Unit shaft resistance with units.
+
+                - For **SI**: Returns :math:`f_s` in **kN/m**\ :sup:`2`.
+                - For **English**: Returns :math:`f_s` in **kip/ft**\ :sup:`2`.
 
         """
         return k * sigma * np.tan(np.deg2rad(delta))
 
-    # -- Method for lateral earth K ------------------------------------------
+    # -- Method for lateral earth K in Revised API ---------------------------
     @staticmethod
-    def lateral_k(corr_n, full_displ=True):
-        """ TODO: add...
+    def lateral_k_rev_api(full_displ):
+        """ Method that returns the value of coefficient of lateral earth,
+        :math:`K`, as per the Revised API guidelines in :numref:`API_K_table`.
 
         Args:
-            corr_n:
-            full_displ:
+            full_displ (bool): Pile condition (open-ended piles: ``False``,
+                full-displacement piles:``True``).
 
         Returns:
+            float: Value of coefficient of lateral earth, :math:`K`, as per
+            Revised API.
 
+        """
+        if full_displ:
+            k = 1.0
+        else:
+            k = 0.8
+
+        return k
+
+    # -- Method for lateral earth K in Olson 90 ------------------------------
+    @staticmethod
+    def lateral_k_olson90(corr_n, full_displ):
+        """ Method that returns the value of coefficient of lateral earth,
+        :math:`K`, as per Olson 90 and equation :eq:`olson90-K`.
+
+        Args:
+            corr_n (int): SPT-N corrected value, :math:`K_{cor}`.
+            full_displ (bool): Pile condition (open-ended piles: ``False``,
+                full-displacement piles:``True``).
+
+        Returns:
+            float: Value of coefficient of lateral earth, :math:`K`, as per
+            Olson 90.
         """
         if full_displ:
             k = 0.70 + 0.015 * corr_n
@@ -314,14 +361,33 @@ class CapacityMethod(object):
 
     # -- Method that returns Olson 90 guidelines -----------------------------
     def olson90_table(self, soil_desc, corr_n, req):
-        """ TODO: add...
+        """ Method that returns Olson 90 values for :math:`\\delta`,
+        :math:`f_{s.lim}`, :math:`N_q` and :math:`q_{p.lim}`. Refer to
+        :numref:`Olson90_table` for more details.
 
         Args:
-            soil_desc:
-            corr_n:
-            req:
+            soil_desc (str): Description of soil material. Permissible inputs
+                are:
+
+                - ``gravel``
+                - ``sand-gravel``
+                - ``sand``
+                - ``sand-silt``
+                - ``silt``
+
+            corr_n (int): SPT-N corrected value, :math:`K_{cor}`.
+            req (str): Requested value. Permissible inputs are:
+
+                - ``delta``: for the friction angle between the soil and the
+                  pile wall, :math:`\\delta`.
+                - ``f_lim``: for the limiting unit shaft resistance,
+                  :math:`f_{s.lim}`.
+                - ``N_q``: for the bearing capacity factor, :math:`N_q`.
+                - ``q_lim``: for the limiting unit toe resistance,
+                  :math:`q_{p.lim}`.
 
         Returns:
+            Quantity or float: The value requested for the given conditions.
 
         """
         allowed_soil = ['gravel', 'sand-gravel', 'sand', 'sand-silt', 'silt']
@@ -385,5 +451,7 @@ class CapacityMethod(object):
 
         if req in ['f_lim', 'q_lim']:
             res = res * self.project.set_units('stress')
+        elif req == 'delta':
+            res = res * self.project.set_units('degrees')
 
         return res
