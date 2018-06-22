@@ -111,7 +111,7 @@ class SoilProfile(Project):
             su (float): Undrained shear strength, *s*\ :sub:`u`.
 
                 - For **SI**: Enter *s*\ :sub:`u` in **kN/m**\ :sup:`2`.
-                - For **English**: Enter *s*\ :sub:`u` in **lbf/ft**\ :sup:`2`.
+                - For **English**: Enter *s*\ :sub:`u` in **kip/ft**\ :sup:`2`.
 
         """
 
@@ -245,6 +245,9 @@ class SoilProfile(Project):
 
         Returns:
             Quantity: A physical quantity with associated units.
+
+                - For **SI**: Stress is returned in, **kN/m**\ :sup:`2`.
+                - For **English**: Stress is returned in, **kip/ft**\ :sup:`2`.
 
         """
 
