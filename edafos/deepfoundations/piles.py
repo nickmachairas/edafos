@@ -51,8 +51,8 @@ class Pile(Project):
             shape (str): Pile shape given pile type. For concrete piles the
                 options are ``square-solid``, ``square-hollow``,
                 ``circle-closed``, ``circle-open``, ``hexagon`` and ``octagon``.
-                For H-piles see documentation for stored sections.
-                TODO: Add reference to table with sections.
+                For H-piles, see :numref:`english_hpile_table` for stored
+                sections.
 
             side (float): :math:`\\alpha`: Side length of square, hexagonal and
                 octagonal piles, at the top.
