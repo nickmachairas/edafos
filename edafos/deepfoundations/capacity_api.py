@@ -1,4 +1,4 @@
-""" Provide the ``API`` class.
+""" Provide the ``Olson 90`` class.
 
 """
 
@@ -6,13 +6,12 @@
 from .capacity_base import CapacityMethod
 
 
-# -- API Class ---------------------------------------------------------------
+# -- Olson 90 Class ----------------------------------------------------------
 
-class API(CapacityMethod):
-    """ Class to represent the Revised API method for capacity calculations of
-    driven or drilled piles.
-
-    TODO: Add Dennis & Olson, API Method 2
+class Olson90(CapacityMethod):
+    """ Class to represent the Olson 90 method for capacity calculations of
+    driven or drilled piles. For the engineering background refer to the section
+    on the :ref:`olson90-method`.
 
     """
 
@@ -26,13 +25,60 @@ class API(CapacityMethod):
         """
         super().__init__(project=project)
 
-        self.method_name = 'Revised API'
+        self.method_name = 'Olson 90'
 
         # Run pre check
         self._pre_check(['soil_desc', 'tuw', 'corr_n', 'su'])
 
         # Run analysis
         self.run()
+
+    # -- Method for shaft resistance -----------------------------------------
+    def shaft_res_per_z(self, z1, z2):
+        """ Method that follows the Olson 90 method for pile shaft resistance
+        and calculates :math:`R_s` for a section defined by ``z1`` and ``z2``.
+
+        Args:
+            z1 (float): Vertical depth to the highest point of interest,
+                measured from the top of the soil profile.
+
+                - For **SI**: Enter depth, *z1*, in **meters**.
+                - For **English**: Enter depth, *z1*, in **feet**.
+
+            z2 (float): Vertical depth to the lowest point of interest,
+                measured from the top of the soil profile.
+
+                - For **SI**: Enter depth, *z1*, in **meters**.
+                - For **English**: Enter depth, *z1*, in **feet**.
+
+        Returns:
+            Quantity: Two values with units depending on pile type. The first
+            for **plugged** conditions, the second for **unplugged** conditions.
+
+        """
+        # Input check
+        if z2 <= z1:
+            raise ValueError("'z2' must be larger than 'z1', please correct.")
+
+        # Get soil type (cohesive/cohesionless)
+        soil_type = self.project.sp.get_soil_prop(z2, 'soil_type')
+
+        # Get Average Effective Stress
+        mid_z = z1 + ((z2 - z1) / 2)
+        eff_stress = self.project.sp.calculate_stress(mid_z)
+
+        # -- Cohesive Soils --------------------------------------------------
+        if soil_type == 'cohesive':
+            # Get the shear strength
+            su = self.project.sp.get_soil_prop(z2, 'su')
+
+            # Get the alpha factor
+            a_factor = self.a_factor_rev_api(eff_stress, su)
+
+            # Calculate unit shaft resistance
+            f_s = self.unit_shaft_res_clay(a_factor, su)
+
+        pass
 
     # -- Method that follows the recipe --------------------------------------
     def run(self):
@@ -87,9 +133,9 @@ class API(CapacityMethod):
                 corr_n = self.project.sp.get_soil_prop(bot_z, 'corr_n')
                 soil_desc = self.project.sp.get_soil_prop(bot_z, 'soil_desc')
                 if self.project.pile.pile_type in ['pipe-open', 'h-pile']:
-                    k = self.lateral_k(corr_n, False)
+                    k = self.lateral_k_olson90(corr_n, False)
                 else:
-                    k = self.lateral_k(corr_n)
+                    k = self.lateral_k_olson90(corr_n, True)
                 delta = self.olson90_table(soil_desc, corr_n, 'delta')
                 f_lim = self.olson90_table(soil_desc, corr_n, 'f_lim')
                 f_s = min(self.unit_shaft_res_sand(k, eff_sigma, delta), f_lim)
