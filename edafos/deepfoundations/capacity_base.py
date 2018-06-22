@@ -169,7 +169,8 @@ class CapacityMethod(object):
         return fs * area
 
     # -- Method for toe resistance (general) ---------------------------------
-    def toe_resistance(self, qp, area):
+    @staticmethod
+    def toe_resistance(qp, area):
         """ Method that calculates toe resistance, :math:`R_p`, as per
         equation :eq:`R_p-api`.
 
@@ -182,7 +183,7 @@ class CapacityMethod(object):
             Quantity: Toe resistance with units.
         """
         res = qp * area
-        return res.to(self.project._set_units('capacity'))
+        return res
 
     # -- Method for unit shaft resistance (cohesive) -------------------------
     @staticmethod
@@ -257,7 +258,8 @@ class CapacityMethod(object):
         if pile_side is None:
             if self.project.pile.pile_type == 'h-pile':
                 d = english_hpiles[pile_shape]['flange_width']
-                two_d_z = toe_z + 2 * d * (self.project._set_units('pile_diameter'))
+                two_d_z = (toe_z + 2 * d *
+                           self.project.set_units('pile_diameter'))
             else:
                 two_d_z = toe_z + 2 * pile_diameter
         else:
@@ -382,6 +384,6 @@ class CapacityMethod(object):
                 res = olson90_data[soil_desc]['very_dense'][req]
 
         if req in ['f_lim', 'q_lim']:
-            res = res * self.project._set_units('stress')
+            res = res * self.project.set_units('stress')
 
         return res

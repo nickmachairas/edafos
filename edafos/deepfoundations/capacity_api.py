@@ -70,8 +70,8 @@ class API(CapacityMethod):
                                                            inside=True)
                 toe_area_upl = self.project.pile.xsection_area(bot_z)
             else:
-                side_area_in = 0 * self.project._set_units('pile_side_area')
-                toe_area_upl = 0 * self.project._set_units('pile_xarea')
+                side_area_in = 0 * self.project.set_units('pile_side_area')
+                toe_area_upl = 0 * self.project.set_units('pile_xarea_alt')
 
             if soil_type == 'cohesive':
                 # Side Friction

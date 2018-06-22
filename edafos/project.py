@@ -56,9 +56,9 @@ class Project(object):
         self.sp = None
         self.pile = None
 
-    # -- A Helper Method to set units (Private) ------------------------------
+    # -- A Helper Method to set units ----------------------------------------
 
-    def _set_units(self, dim):
+    def set_units(self, dim):
         """ A private helper method that returns the Pint units to be attached
         to a variable based on the set unit system and dimensionality (dim).
         Since this is a private method, the stored values will not be shown
@@ -83,6 +83,8 @@ class Project(object):
             'pile_diameter': {'SI': units.cm, 'English': units.inches},
             'pile_length': {'SI': units.meter, 'English': units.feet},
             'pile_xarea': {'SI': units.cm ** 2, 'English': units.inches ** 2},
+            'pile_xarea_alt': {'SI': units.meter ** 2,
+                               'English': units.feet ** 2},
             'pile_side_area': {'SI': units.meter ** 2,
                                'English': units.feet ** 2},
         }

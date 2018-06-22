@@ -41,7 +41,7 @@ class SoilProfile(Project):
         super().__init__(unit_system=unit_system)
 
         # Set units for the water table
-        self.water_table = float(water_table) * self._set_units('length')
+        self.water_table = float(water_table) * self.set_units('length')
 
         # Call function to instantiate the soil profile data frame
         self._create_profile()
@@ -261,16 +261,16 @@ class SoilProfile(Project):
         if z > max_depth:
             raise ValueError("Depth z = {0} {2}, is beyond the total defined "
                              "soil profile depth, {1} {2}."
-                             "".format(z, max_depth, self._set_units('length')))
+                             "".format(z, max_depth, self.set_units('length')))
         elif ((z < 0) and (self.water_table.magnitude >= 0)) \
                 or (z < self.water_table.magnitude < 0):
             raise ValueError("Nothing but thin air at z = {} {}. Try lower."
-                             "".format(z, self._set_units('length')))
+                             "".format(z, self.set_units('length')))
         else:
             pass
 
         # Set units for input parameter, z
-        z = float(z) * self._set_units('length')
+        z = float(z) * self.set_units('length')
 
         # Define zw, the vertical distance below the water table.
         zw = z - self.water_table
@@ -279,20 +279,20 @@ class SoilProfile(Project):
 
         # Define pore water pressure
         if self.unit_system == 'SI':
-            gamma_w = 9.81 * self._set_units('tuw')
+            gamma_w = 9.81 * self.set_units('tuw')
         else:
-            gamma_w = 62.4 * self._set_units('tuw')
+            gamma_w = 62.4 * self.set_units('tuw')
         pore_water = zw * gamma_w
 
         # -- Define total stress ---------------------------------------------
-        h1 = self.layers['Height'][1] * self._set_units('length')
-        g1 = self.layers['TUW'][1] * self._set_units('tuw')
+        h1 = self.layers['Height'][1] * self.set_units('length')
+        g1 = self.layers['TUW'][1] * self.set_units('tuw')
 
         # Prepare for Takeaway No 4
         if (z.magnitude >= 0) and (self.water_table.magnitude < 0):
             stress_from_water_body = abs(self.water_table) * gamma_w
         else:
-            stress_from_water_body = 0 * self._set_units('stress')
+            stress_from_water_body = 0 * self.set_units('stress')
 
         # Main if statement
         if (z.magnitude < 0) and (self.water_table.magnitude < 0):
@@ -305,15 +305,10 @@ class SoilProfile(Project):
             # Get the layer index where z is at the interface
             ix = self.layers[self.layers['Depth'] == z.magnitude].index[0]
 
-            # Multiply and sum the data frame columns of relevant layers
-            # total_stress = (sum(self.layers['Height'][0:ix] *
-            #                     self.layers['TUW'][0:ix]
-            #                     ) * self._set_units('stress')
-            #                 ) + stress_from_water_body
             total_stress = sum((self.layers['Height'][0:ix].values
-                                * self._set_units('length')) *
+                                * self.set_units('length')) *
                                (self.layers['TUW'][0:ix].values *
-                                self._set_units('tuw'))
+                                self.set_units('tuw'))
                                ) + stress_from_water_body
 
         else:
@@ -323,23 +318,15 @@ class SoilProfile(Project):
             # Get the current layer index where z is in
             ixc = self.layers[self.layers['Depth'] > z.magnitude].index[0]
 
-            # Multiply and sum the data frame columns of relevant layers
-            # total_stress = ((sum(self.layers['Height'][0:ixp] *
-            #                      self.layers['TUW'][0:ixp]
-            #                      ) + (
-            #                      (z.magnitude - self.layers['Depth'][ixp]) *
-            #                      self.layers['TUW'][ixc])
-            #                  ) * self._set_units('stress')
-            #                 ) + stress_from_water_body
             total_stress = (sum((self.layers['Height'][0:ixp].values *
-                                 self._set_units('length')) *
+                                 self.set_units('length')) *
                                 (self.layers['TUW'][0:ixp].values *
-                                 self._set_units('tuw'))
+                                 self.set_units('tuw'))
                                 ) + (
                                 ((z.magnitude - self.layers['Depth'][ixp]) *
-                                 self._set_units('length')) *
+                                 self.set_units('length')) *
                                 (self.layers['TUW'][ixc] *
-                                 self._set_units('tuw')))
+                                 self.set_units('tuw')))
 
                             ) + stress_from_water_body
 
@@ -402,19 +389,19 @@ class SoilProfile(Project):
         elif sp == 'soil_desc':
             value = df['Soil Desc'][index]
         elif sp == 'height':
-            value = df['Height'][index] * self._set_units('length')
+            value = df['Height'][index] * self.set_units('length')
         elif sp == 'tuw':
-            value = df['TUW'][index] * self._set_units('tuw')
+            value = df['TUW'][index] * self.set_units('tuw')
         elif sp == 'field_n':
             value = df['Field N'][index]
         elif sp == 'corr_n':
             value = df['Corr. N'][index]
         elif sp == 'field_phi':
-            value = df['Field Phi'][index] * self._set_units('degrees')
+            value = df['Field Phi'][index] * self.set_units('degrees')
         elif sp == 'calc_phi':
-            value = df['Calc. Phi'][index] * self._set_units('degrees')
+            value = df['Calc. Phi'][index] * self.set_units('degrees')
         else:  # su
-            value = df['Shear Su'][index] * self._set_units('stress')
+            value = df['Shear Su'][index] * self.set_units('stress')
 
         return value
 

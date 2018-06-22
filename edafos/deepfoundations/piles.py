@@ -185,15 +185,15 @@ class Pile(Project):
                 else:
                     pass
             # Fix assignments and units
-            self.side = (self.side * self._set_units('pile_diameter')
+            self.side = (self.side * self.set_units('pile_diameter')
                          if self.side is not None else None)
-            self.diameter = (self.diameter * self._set_units('pile_diameter')
+            self.diameter = (self.diameter * self.set_units('pile_diameter')
                              if self.diameter is not None else None)
-            self.thickness = (self.thickness * self._set_units('pile_diameter')
+            self.thickness = (self.thickness * self.set_units('pile_diameter')
                               if self.thickness is not None else None)
-            self.length = self.length * self._set_units('pile_length')
-            self.pen_depth = self.pen_depth * self._set_units('pile_length')
-            self.nf_zone = (self.nf_zone * self._set_units('pile_length')
+            self.length = self.length * self.set_units('pile_length')
+            self.pen_depth = self.pen_depth * self.set_units('pile_length')
+            self.nf_zone = (self.nf_zone * self.set_units('pile_length')
                             if self.nf_zone is not None else None)
             if self.shape in ['square-solid', 'hexagon', 'octagon']:
                 self.diameter = None
@@ -228,7 +228,7 @@ class Pile(Project):
                                              " than top pile diameter.")
                         else:
                             diam_list.append(i[0])
-                            i[0] = i[0] * self._set_units('pile_diameter')
+                            i[0] = i[0] * self.set_units('pile_diameter')
                     if (len(set(diam_list)) == 1) and (diam_list[0] ==
                                                        self.diameter.magnitude):
                         raise ValueError("This is not a tapered pile. All "
@@ -241,7 +241,7 @@ class Pile(Project):
                                              " than top pile diameter.")
                         else:
                             diam_list.append(i[0])
-                            i[0] = i[0] * self._set_units('pile_diameter')
+                            i[0] = i[0] * self.set_units('pile_diameter')
                     if (len(set(diam_list)) == 1) and (diam_list[0] ==
                                                        self.side.magnitude):
                         raise ValueError("This is not a tapered pile. All "
@@ -266,11 +266,11 @@ class Pile(Project):
             # Fix assignments and units
             self.shape = 'circular'
             self.side = None
-            self.diameter = self.diameter * self._set_units('pile_diameter')
-            self.thickness = self.thickness * self._set_units('pile_diameter')
-            self.length = self.length * self._set_units('pile_length')
-            self.pen_depth = self.pen_depth * self._set_units('pile_length')
-            self.nf_zone = (self.nf_zone * self._set_units('pile_length')
+            self.diameter = self.diameter * self.set_units('pile_diameter')
+            self.thickness = self.thickness * self.set_units('pile_diameter')
+            self.length = self.length * self.set_units('pile_length')
+            self.pen_depth = self.pen_depth * self.set_units('pile_length')
+            self.nf_zone = (self.nf_zone * self.set_units('pile_length')
                             if self.nf_zone is not None else None)
 
         # -- Checks for pipe closed piles ------------------------------------
@@ -291,11 +291,11 @@ class Pile(Project):
             # Fix assignments and units
             self.shape = 'circular'
             self.side = None
-            self.diameter = self.diameter * self._set_units('pile_diameter')
-            self.thickness = self.thickness * self._set_units('pile_diameter')
-            self.length = self.length * self._set_units('pile_length')
-            self.pen_depth = self.pen_depth * self._set_units('pile_length')
-            self.nf_zone = (self.nf_zone * self._set_units('pile_length')
+            self.diameter = self.diameter * self.set_units('pile_diameter')
+            self.thickness = self.thickness * self.set_units('pile_diameter')
+            self.length = self.length * self.set_units('pile_length')
+            self.pen_depth = self.pen_depth * self.set_units('pile_length')
+            self.nf_zone = (self.nf_zone * self.set_units('pile_length')
                             if self.nf_zone is not None else None)
 
         # -- Checks for H-Piles ----------------------------------------------
@@ -327,9 +327,9 @@ class Pile(Project):
             self.side = None
             self.diameter = None
             self.thickness = None
-            self.length = self.length * self._set_units('pile_length')
-            self.pen_depth = self.pen_depth * self._set_units('pile_length')
-            self.nf_zone = (self.nf_zone * self._set_units('pile_length')
+            self.length = self.length * self.set_units('pile_length')
+            self.pen_depth = self.pen_depth * self.set_units('pile_length')
+            self.nf_zone = (self.nf_zone * self.set_units('pile_length')
                             if self.nf_zone is not None else None)
 
         # -- Checks for timber and cast-in-place piles -----------------------
@@ -344,11 +344,11 @@ class Pile(Project):
             # Fix assignments and units
             self.shape = 'circular'
             self.side = None
-            self.diameter = self.diameter * self._set_units('pile_diameter')
+            self.diameter = self.diameter * self.set_units('pile_diameter')
             self.thickness = None
-            self.length = self.length * self._set_units('pile_length')
-            self.pen_depth = self.pen_depth * self._set_units('pile_length')
-            self.nf_zone = (self.nf_zone * self._set_units('pile_length')
+            self.length = self.length * self.set_units('pile_length')
+            self.pen_depth = self.pen_depth * self.set_units('pile_length')
+            self.nf_zone = (self.nf_zone * self.set_units('pile_length')
                             if self.nf_zone is not None else None)
 
             # Check for taper dims diameters
@@ -372,7 +372,7 @@ class Pile(Project):
                                          " than top pile diameter.")
                     else:
                         diam_list.append(i[0])
-                        i[0] = i[0] * self._set_units('pile_diameter')
+                        i[0] = i[0] * self.set_units('pile_diameter')
                 if (len(set(diam_list)) == 1) and (diam_list[0] ==
                                                    self.diameter.magnitude):
                     raise ValueError("This is not a tapered pile. All "
@@ -406,7 +406,7 @@ class Pile(Project):
                                      "dimensions. Please correct.")
                 else:
                     taper_length = taper_length + i[1]
-                    i[1] = i[1] * self._set_units('pile_length')
+                    i[1] = i[1] * self.set_units('pile_length')
             if taper_length != self.length.magnitude:
                 raise ValueError("Sum of lengths of tapered portions does "
                                  "not equal total pile length")
@@ -473,7 +473,7 @@ class Pile(Project):
         Returns:
             Quantity: Side :math:`a`, or diameter, :math:`d`.
         """
-        z = z * self._set_units('length')
+        z = z * self.set_units('length')
         # The length x from the top of the pile is defined as
         x = self.length - self.pen_depth + z
 
@@ -510,7 +510,7 @@ class Pile(Project):
                 li = [0] + [i[1].magnitude for i in self.taper_dims]
                 li = np.cumsum(li)
 
-        return np.interp(x.magnitude, li, di) * self._set_units('pile_diameter')
+        return np.interp(x.magnitude, li, di) * self.set_units('pile_diameter')
 
     # -- Method for cross sectional area at z --------------------------------
 
@@ -553,7 +553,7 @@ class Pile(Project):
         x = self.length.magnitude - self.pen_depth.magnitude + z
 
         if (x < 0) or (x > self.length.magnitude):
-            area = 0 * self._set_units('pile_xarea')
+            area = 0 * self.set_units('pile_xarea')
         elif self.pile_type == 'concrete':
             if self.shape in ['square-solid', 'square-hollow']:
                 area = self.area_of_shape(self._pile_a_d(z), 'square')
@@ -583,15 +583,17 @@ class Pile(Project):
         elif self.pile_type == 'h-pile':
             if box_area:
                 area = english_hpiles[self.shape]['box_area'] \
-                       * self._set_units('pile_xarea')
+                       * self.set_units('pile_xarea')
             else:
                 area = english_hpiles[self.shape]['area'] \
-                       * self._set_units('pile_xarea')
+                       * self.set_units('pile_xarea')
 
         else:  # Timber and cast-in-place piles
             area = self.area_of_shape(self._pile_a_d(z), 'circle')
 
-        return area
+        # Had to convert area from in2 to ft2 because unit toe resistance units
+        # were not correctly formatted
+        return area.to(self.set_units('pile_xarea_alt'))
 
     # -- Method for side area between z1, z2 ---------------------------------
 
@@ -632,12 +634,12 @@ class Pile(Project):
         x1 = self.length.magnitude - self.pen_depth.magnitude + z1
         x2 = self.length.magnitude - self.pen_depth.magnitude + z2
 
-        h = (z2 - z1) * self._set_units('pile_length')
+        h = (z2 - z1) * self.set_units('pile_length')
 
         # TODO: Give these limits another thought, maybe not return zero.
         if (x1 < 0) or (x1 > self.length.magnitude) or (x2 < 0) or \
                 (x2 > self.length.magnitude):
-            area = 0 * self._set_units('pile_xarea')
+            area = 0 * self.set_units('pile_xarea')
         elif self.pile_type == 'concrete':
             if self.shape in ['square-solid', 'square-hollow']:
                 area = 4 * self.area_of_shape(ad=self._pile_a_d(z1),
@@ -660,11 +662,11 @@ class Pile(Project):
             if (self.pile_type == 'pipe-open') and inside:
                 t = self.thickness.magnitude
                 area = self.area_of_shape(ad=(self._pile_a_d(z1) - 2*t *
-                                              self._set_units('pile_diameter')
+                                              self.set_units('pile_diameter')
                                               ),
                                           shape='cone',
                                           ad2=(self._pile_a_d(z2) - 2*t *
-                                               self._set_units('pile_diameter')
+                                               self.set_units('pile_diameter')
                                                ),
                                           h=h)
             else:
@@ -674,16 +676,16 @@ class Pile(Project):
         elif self.pile_type == 'h-pile':
             if box_area:
                 area = (english_hpiles[self.shape]['box_perimeter']
-                        * self._set_units('pile_diameter')) * h
+                        * self.set_units('pile_diameter')) * h
             else:
                 area = (english_hpiles[self.shape]['perimeter']
-                        * self._set_units('pile_diameter')) * h
+                        * self.set_units('pile_diameter')) * h
 
         else:  # Timber and cast-in-place piles
             area = self.area_of_shape(ad=self._pile_a_d(z1), shape='cone',
                                       ad2=self._pile_a_d(z2), h=h)
 
-        return area.to(self._set_units('pile_side_area'))
+        return area.to(self.set_units('pile_side_area'))
 
     # -- Method that returns list of relevant z's ----------------------------
 
