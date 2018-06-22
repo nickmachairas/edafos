@@ -1,6 +1,6 @@
 from edafos.project import Project
 from edafos.soil import SoilProfile
-from edafos.deepfoundations import Pile, API
+from edafos.deepfoundations import Pile, Olson90
 # import pandas as pd
 # from tabulate import tabulate
 
@@ -82,7 +82,7 @@ def example1():
                       field_phi=35,
                       corr_n=20)
     profile.add_layer(soil_type='cohesionless',
-                      # soil_desc='sand',
+                      soil_desc='sand',
                       height=30,
                       tuw=100,
                       field_phi=35,
@@ -111,7 +111,7 @@ def example1():
     project.sp.calculate_stress(15)
 
     # Start a pile capacity analysis
-    api = API(project)
+    api = Olson90(project)
 
     # print(project)
     # print("*************")
@@ -164,7 +164,7 @@ def reese102():
     project.attach_pile(pile)
 
     # Start a pile capacity analysis
-    api = API(project)
+    api = Olson90(project)
 
     # sigma = api.project.sp.calculate_stress(2)
     # su = api.project.sp.get_soil_prop(2, 'su')
@@ -202,7 +202,7 @@ def olson90_example():
     project.attach_pile(pile)
 
     # Start a pile capacity analysis
-    api = API(project)
+    api = Olson90(project)
     print(api.capacity)
 
 
@@ -221,8 +221,8 @@ if __name__ == "__main__":
     # print(profile1.layers['Depth'].isnull().all().values[0])
     # print(profile1.layers['Field N'].isnull().all().values[0])
     # print(profile1.calculate_stress(6))
-    olson_010()
+    # olson_010()
     # test_pile()
     # example1()
     # reese102()
-    # olson90_example()
+    olson90_example()
