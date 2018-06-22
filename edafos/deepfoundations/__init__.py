@@ -1,2 +1,2 @@
 from .piles import Pile
-from .capacity_api import API
+from .capacity_api import Olson90
