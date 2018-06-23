@@ -27,7 +27,7 @@ author = 'Nick Machairas'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '0.1.0beta'
+release = '0.1.0-beta'
 
 
 # -- General configuration ---------------------------------------------------
@@ -51,6 +51,7 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
+    'sphinx.ext.inheritance_diagram',
 ]
 
 # This is the best option to add the __init__ method in the documentation.

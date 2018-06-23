@@ -8,6 +8,12 @@ Module Documentation
 This section provides the complete API reference for ``edafos``, auto-generated
 from the docstrings in the project source code.
 
+.. rubric:: Inheritance Diagram
+
+.. inheritance-diagram:: edafos.soil.profile edafos.deepfoundations.piles
+   edafos.deepfoundations.capacity_base edafos.deepfoundations.capacity_api
+   :parts: 1
+
 
 ******************
 ``edafos.project``
