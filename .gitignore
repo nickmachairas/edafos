@@ -1,3 +1,6 @@
+# PyTest cache
+.pytest_cache/
+
 # PyCharm project folder
 .idea/
 
