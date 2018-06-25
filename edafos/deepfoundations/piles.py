@@ -650,7 +650,7 @@ class Pile(Project):
                                               shape='trapezoid',
                                               ad2=self._pile_a_d(z2), h=h)
             elif self.shape == 'octagon':
-                area = 6 * self.area_of_shape(ad=self._pile_a_d(z1),
+                area = 8 * self.area_of_shape(ad=self._pile_a_d(z1),
                                               shape='trapezoid',
                                               ad2=self._pile_a_d(z2), h=h)
             else:  # circle-closed and circle-open
