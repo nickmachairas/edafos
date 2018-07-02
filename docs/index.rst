@@ -46,6 +46,7 @@ Introduction
    :maxdepth: 2
 
    intro/units
+   intro/nomenclature
 
 
 
@@ -63,6 +64,7 @@ Soil Profile
    :caption: SOIL PROFILE:
 
    soil/delineation
+   soil/correlations
    soil/stresses
 
 
