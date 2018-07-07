@@ -54,6 +54,10 @@ extensions = [
     'sphinx.ext.inheritance_diagram',
 ]
 
+# matplotlib directive options
+plot_html_show_source_link = False
+
+
 # This is the best option to add the __init__ method in the documentation.
 # I found it in the bokeh docs.
 napoleon_include_init_with_doc = True
