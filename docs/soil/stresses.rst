@@ -139,11 +139,13 @@ The same example can be implemented in ``edafos`` as follows.
    print("Total Stress: {:0.3f}\nPore Water Pressure: {:0.3f}\n"
          "Effective Stress: {:0.3f}".format(total, pore, effective))
 
-|
 
-You can also create a stress distribution plot:
+
+You can also create a stress distribution plot as shown in
+:numref:`soilstresses_caseA_auto`.
 
 .. plot::
+   :nofigs:
 
    import numpy as np
    import matplotlib.pyplot as plt
@@ -168,7 +170,17 @@ You can also create a stress distribution plot:
    plt.gca().invert_yaxis()
    plt.grid()
    plt.legend()
-   plt.show()
+   plt.savefig('../_static/figures/soilstresses_caseA_auto.png', dpi=150)
+
+
+.. _soilstresses_caseA_auto:
+.. figure:: ../_static/figures/soilstresses_caseA_auto.png
+   :alt: soilstresses_caseA_auto.png
+   :align: center
+   :width: 400 px
+
+   Stress distribution for Case A.
+
 
 
 ----
@@ -295,11 +307,13 @@ Case B can be implemented in ``edafos`` as follows.
          "Effective Stress: {:0.3f}".format(total, pore, effective))
 
 
-|
 
-You can also create a stress distribution plot:
+
+You can also create a stress distribution plot as shown in
+:numref:`soilstresses_caseB_auto`.
 
 .. plot::
+   :nofigs:
 
    import numpy as np
    import matplotlib.pyplot as plt
@@ -325,7 +339,16 @@ You can also create a stress distribution plot:
    plt.gca().invert_yaxis()
    plt.grid()
    plt.legend()
-   plt.show()
+   plt.savefig('../_static/figures/soilstresses_caseB_auto.png', dpi=150)
+
+
+.. _soilstresses_caseB_auto:
+.. figure:: ../_static/figures/soilstresses_caseB_auto.png
+   :alt: soilstresses_caseB_auto.png
+   :align: center
+   :width: 400 px
+
+   Stress distribution for Case B.
 
 
 ----
@@ -450,11 +473,13 @@ Case C can be implemented in ``edafos`` as follows.
          "Effective Stress: {:0.3f}".format(total, pore, effective))
 
 
-|
 
-You can also create a stress distribution plot:
+
+You can also create a stress distribution plot as shown in
+:numref:`soilstresses_caseC_auto`.
 
 .. plot::
+   :nofigs:
 
    import numpy as np
    import matplotlib.pyplot as plt
@@ -480,5 +505,14 @@ You can also create a stress distribution plot:
    plt.gca().invert_yaxis()
    plt.grid()
    plt.legend()
-   plt.show()
+   plt.savefig('../_static/figures/soilstresses_caseC_auto.png', dpi=150)
+
+
+.. _soilstresses_caseC_auto:
+.. figure:: ../_static/figures/soilstresses_caseC_auto.png
+   :alt: soilstresses_caseC_auto.png
+   :align: center
+   :width: 400 px
+
+   Stress distribution for Case C.
 
