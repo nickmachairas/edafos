@@ -45,6 +45,7 @@ Introduction
    :caption: INTRODUCTION:
    :maxdepth: 2
 
+   intro/what_is
    intro/units
    intro/nomenclature
 
