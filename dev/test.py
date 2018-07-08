@@ -43,6 +43,8 @@ def olson_010():
         res = profile.calculate_stress(i)
         print(i, res)
 
+    return profile.plot()
+
 
 def test_pile():
     pile = Pile(unit_system='English',
@@ -221,8 +223,8 @@ if __name__ == "__main__":
     # print(profile1.layers['Depth'].isnull().all().values[0])
     # print(profile1.layers['Field N'].isnull().all().values[0])
     # print(profile1.calculate_stress(6))
-    # olson_010()
+    olson_010()
     # test_pile()
     # example1()
     # reese102()
-    olson90_example()
+    # olson90_example()

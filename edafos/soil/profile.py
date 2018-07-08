@@ -4,6 +4,7 @@
 
 # -- Imports -----------------------------------------------------------------
 from edafos.project import Project
+from edafos.viz import ProfilePlot
 from tabulate import tabulate
 import numpy as np
 import pandas as pd
@@ -346,6 +347,7 @@ class SoilProfile(Project):
             return total_stress, pore_water, effective_stress
 
     # -- Method that returns soil properties given z -------------------------
+
     def get_soil_prop(self, z, sp):
         """ This method will return the soil property (with units), i.e. SPT-N,
         total unit weight, undrained shear strength, etc. at depth, :math:`z`.
@@ -407,6 +409,16 @@ class SoilProfile(Project):
             value = df['Shear Su'][index] * self.set_units('stress')
 
         return value
+
+    # -- Method that returns the plot of the profile -------------------------
+
+    def plot(self):
+        """
+
+        Returns:
+
+        """
+        return ProfilePlot(self).construct()
 
     # -- Method for string representation ------------------------------------
 
