@@ -122,6 +122,7 @@ si_hpiles = {
 }
 
 # -- API Guidelines for Shaft and Toe Resistance -----------------------------
+
 api_data = {
     'very_loose': {
         'Ncor': '0 - 4',  # bpf
@@ -161,6 +162,7 @@ api_data = {
 }
 
 # -- Olson 90 Guidelines for Shaft and Toe Resistance ------------------------
+
 olson90_data = {
     'gravel': {
         'very_loose': {
@@ -353,5 +355,235 @@ olson90_data = {
             'N_q': 12,
             'q_lim': 60,
         },
+    },
+}
+
+# -- USCS --------------------------------------------------------------------
+
+uscs_dict = {
+    'GW': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Gravels (More than 50% of '
+                    'coarse fraction larger than No. 4 sieve size) > Clean '
+                    'Gravels (Less than 5% fines)',
+        'long_desc': 'Well-graded gravels, gravel-sand mixtures, little or no '
+                     'fines',
+        'short_desc': 'Gravel (WG)',
+    },
+    'GP': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Gravels (More than 50% of '
+                    'coarse fraction larger than No. 4 sieve size) > Clean '
+                    'Gravels (Less than 5% fines)',
+        'long_desc': 'Poorly-graded gravels, gravel-sand mixtures, little or no'
+                     ' fines',
+        'short_desc': 'Gravel (PG)',
+    },
+    'GM': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Gravels (More than 50% of '
+                    'coarse fraction larger than No. 4 sieve size) > Gravels '
+                    'with Fines (More than 12% fines)',
+        'long_desc': 'Silty gravels, gravel-sand-silt mixtures',
+        'short_desc': 'Silty gravel',
+    },
+    'GC': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Gravels (More than 50% of '
+                    'coarse fraction larger than No. 4 sieve size) > Gravels '
+                    'with Fines (More than 12% fines)',
+        'long_desc': 'Clayey gravels, gravel-sand-clay mixtures',
+        'short_desc': 'Clayey gravel',
+    },
+    'GW-GM': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Gravels (More than 50% of '
+                    'coarse fraction larger than No. 4 sieve size) > Gravels '
+                    'with Fines (More than 12% fines)',
+        'long_desc': 'Well-graded gravels, gravel-sand mixtures, with fines',
+        'short_desc': 'Gravel (WG, w/ fines)',
+    },
+    'GP-GM': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Gravels (More than 50% of '
+                    'coarse fraction larger than No. 4 sieve size) > Gravels '
+                    'with Fines (More than 12% fines)',
+        'long_desc': 'Poorly-graded gravels, gravel-sand mixtures, with fines',
+        'short_desc': 'Gravel (PG, w/ fines)',
+    },
+    'SW': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Sands 50% or more of coarse '
+                    'fraction smaller than No. 4 sieve size > Clean Sands '
+                    '(Less than 5% fines)',
+        'long_desc': 'Well-graded sands, gravelly sands, little or no fines',
+        'short_desc': 'Sand (WG)',
+    },
+    'SP': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Sands 50% or more of coarse '
+                    'fraction smaller than No. 4 sieve size > Clean Sands '
+                    '(Less than 5% fines)',
+        'long_desc': 'Poorly-graded sands, gravelly sands, little or no fines',
+        'short_desc': 'Sand (PG)',
+    },
+    'SM': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Sands 50% or more of coarse '
+                    'fraction smaller than No. 4 sieve size > Sands with Fines '
+                    '(More than 12% fines)',
+        'long_desc': 'Silty sands, sand-silt mixtures',
+        'short_desc': 'Silty sand',
+    },
+    'SC': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Sands 50% or more of coarse '
+                    'fraction smaller than No. 4 sieve size > Sands with Fines '
+                    '(More than 12% fines)',
+        'long_desc': 'Clayey sands, sand-clay mixtures',
+        'short_desc': 'Clayey sand',
+    },
+    'SW-SM': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Sands 50% or more of coarse '
+                    'fraction smaller than No. 4 sieve size > Sands with Fines '
+                    '(More than 12% fines)',
+        'long_desc': 'Well-graded sands, gravelly sands, with silt',
+        'short_desc': 'Sand (WG, w/ silt)',
+    },
+    'SW-SC': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Sands 50% or more of coarse '
+                    'fraction smaller than No. 4 sieve size > Sands with Fines '
+                    '(More than 12% fines)',
+        'long_desc': 'Well-graded sands, gravelly sands, with clay',
+        'short_desc': 'Sand (WG, w/ clay)',
+    },
+    'SP-SM': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Sands 50% or more of coarse '
+                    'fraction smaller than No. 4 sieve size > Sands with Fines '
+                    '(More than 12% fines)',
+        'long_desc': 'Poorly-graded sands, gravelly sands, with silt',
+        'short_desc': 'Sand (PG, w/ silt)',
+    },
+    'SP-SC': {
+        'soil_type': 'cohesionless',
+        'category': 'Coarse-grained soils (more than 50% of material is larger '
+                    'than No. 200 sieve size) > Sands 50% or more of coarse '
+                    'fraction smaller than No. 4 sieve size > Sands with Fines '
+                    '(More than 12% fines)',
+        'long_desc': 'Poorly-graded sands, gravelly sands, with clay',
+        'short_desc': 'Sand (PG, w/ clay)',
+    },
+    'ML': {
+        'soil_type': 'cohesive',
+        'category': 'Fine-graned soils (50% or more of material is smaller '
+                    'than No. 200 sieve size) > Silts and Clays (Liquid limit '
+                    'less than 50%)',
+        'long_desc': 'Inorganic silts and very fine sands, rock flour, silty '
+                     'of clayey fine sands or clayey silts with slight '
+                     'plasticity',
+        'short_desc': 'Sandy/Clayey Silt (LP)',
+    },
+    'CL': {
+        'soil_type': 'cohesive',
+        'category': 'Fine-graned soils (50% or more of material is smaller '
+                    'than No. 200 sieve size) > Silts and Clays (Liquid limit '
+                    'less than 50%)',
+        'long_desc': 'Inorganic clays of low to medium plasticity, gravelly '
+                     'clays, sandy clays, silty clays, lean clays',
+        'short_desc': 'Clay (LP)',
+    },
+    'OL': {
+        'soil_type': 'cohesive',
+        'category': 'Fine-graned soils (50% or more of material is smaller '
+                    'than No. 200 sieve size) > Silts and Clays (Liquid limit '
+                    'less than 50%)',
+        'long_desc': 'Organic silts and organic silty clays of low plasticity',
+        'short_desc': 'Organic silt/clay (LP)',
+    },
+    'CL-ML': {
+        'soil_type': 'cohesive',
+        'category': 'Fine-graned soils (50% or more of material is smaller '
+                    'than No. 200 sieve size) > Silts and Clays (Liquid limit '
+                    'less than 50%)',
+        'long_desc': '',
+        'short_desc': 'Silty Clay (LP)',
+    },
+    'SM-ML': {
+        'soil_type': 'cohesive',
+        'category': 'Fine-graned soils (50% or more of material is smaller '
+                    'than No. 200 sieve size) > Silts and Clays (Liquid limit '
+                    'less than 50%)',
+        'long_desc': '',
+        'short_desc': 'Sandy/Clayey Silt (LP)',
+    },
+    'MH': {
+        'soil_type': 'cohesive',
+        'category': 'Fine-graned soils (50% or more of material is smaller '
+                    'than No. 200 sieve size) > Silts and Clays (Liquid limit '
+                    '50% or greater)',
+        'long_desc': 'Inorganic silts, micaceous or diatomaceous fine sandy or '
+                     'silty soils, elastic silts',
+        'short_desc': 'Sandy/Clayey Silt (HP)',
+    },
+    'CH': {
+        'soil_type': 'cohesive',
+        'category': 'Fine-graned soils (50% or more of material is smaller '
+                    'than No. 200 sieve size) > Silts and Clays (Liquid limit '
+                    '50% or greater)',
+        'long_desc': 'Inorganic clays of high plasticity, fat clays',
+        'short_desc': 'Clay (HP)',
+    },
+    'OH': {
+        'soil_type': 'cohesive',
+        'category': 'Fine-graned soils (50% or more of material is smaller '
+                    'than No. 200 sieve size) > Silts and Clays (Liquid limit '
+                    '50% or greater)',
+        'long_desc': 'Organic clays of medium to high plasticity, organic '
+                     'silts',
+        'short_desc': 'Organic silt/clay (HP)',
+    },
+    'OL-OH': {
+        'soil_type': 'cohesive',
+        'category': 'Fine-graned soils (50% or more of material is smaller '
+                    'than No. 200 sieve size) > Silts and Clays (Liquid limit '
+                    '50% or greater)',
+        'long_desc': '',
+        'short_desc': '',
+    },
+    'CL-CH': {
+        'soil_type': 'cohesive',
+        'category': 'Fine-graned soils (50% or more of material is smaller '
+                    'than No. 200 sieve size) > Silts and Clays (Liquid limit '
+                    '50% or greater)',
+        'long_desc': '',
+        'short_desc': '',
+    },
+    'PT': {
+        'soil_type': 'cohesive',
+        'category': 'Highly organic soils',
+        'long_desc': 'Peat and other highly organic soils',
+        'short_desc': 'Peat',
+    },
+    'ROCK': {
+        'soil_type': 'rock',
+        'category': 'Rocks',
+        'long_desc': '',
+        'short_desc': 'Rock',
     },
 }
