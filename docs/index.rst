@@ -65,6 +65,7 @@ Soil Profile
    :caption: SOIL PROFILE:
 
    soil/delineation
+   soil/classification
    soil/correlations
    soil/stresses
 
