@@ -25,7 +25,7 @@ class SoilProfile(Project):
 
     # -- Constructor ---------------------------------------------------------
 
-    def __init__(self, unit_system, water_table):
+    def __init__(self, unit_system, water_table, name=None):
         """
         Args:
             water_table (float): Depth to water table measured from ground
@@ -33,6 +33,8 @@ class SoilProfile(Project):
 
                 - For **SI**: Enter value in **meters**.
                 - For **English**: Enter value in **feet**.
+
+            name (str): A name for the soil profile (default is None)
 
             unit_system (str): The unit system for the project. Can only be
                 'English', or 'SI'. Properties inherited from the ``Project``
@@ -43,6 +45,12 @@ class SoilProfile(Project):
 
         # Set units for the water table
         self.water_table = float(water_table) * self.set_units('length')
+
+        # A name for the soil profile object
+        self.name = name
+
+        # Initiate SPT data attribute
+        self.spt_data = None
 
         # Call function to instantiate the soil profile data frame
         self._create_profile()
@@ -184,6 +192,33 @@ class SoilProfile(Project):
         for column in self.layers.columns:
             if column not in ['Soil Type', 'Soil Desc']:
                 self.layers[column] = self.layers[column].astype(float)
+
+        return self
+
+    # -- Method that adds SPT-N data -----------------------------------------
+    def add_spt_data(self, data, from_csv=False):
+        """ Method that adds SPT-N values, either as a list (of lists) or
+        imported from a CSV file.
+
+        Args:
+            data (list): a list of lists for SPT-N data. The first list must
+                contain the depth values while the second list must contain
+                the N values.
+
+            from_csv (bool): Set to 'True' and specify the path to the CSV file.
+
+        Returns:
+
+        """
+        # TODO: add CSV import functionality
+        # TODO: check SPT values, make them integers
+        # TODO: produce corrected SPT values
+
+        if from_csv:
+            pass
+        else:
+            df = pd.DataFrame({'Depth': data[0], 'SPT-N': data[1]})
+            self.spt_data = df
 
         return self
 
