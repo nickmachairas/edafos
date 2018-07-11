@@ -105,6 +105,32 @@ class ProfilePlot(object):
 
         return tbl
 
+    # -- Matplotlib SPT-N plot -----------------------------------------------
+    def spt_plot(self, axis, ax1_ymin, ax1_ymax):
+        """
+
+        Args:
+            axis:
+
+        Returns:
+
+        """
+        ax = axis.scatter(x=self.obj.spt_data['SPT-N'],
+                          y=self.obj.spt_data['Depth'],
+                          s=3,
+                          c='k')
+
+        axis.invert_yaxis()
+        axis.set_ylim(ymin=ax1_ymin,
+                      ymax=ax1_ymax)
+        axis.xaxis.tick_top()
+        axis.xaxis.set_label_position('top')
+        axis.get_yaxis().set_visible(False)
+        axis.set_xlabel('Field SPT-N', fontsize=9)
+        axis.xaxis.set_tick_params(labelsize=8)
+
+        return ax
+
     # -- Construct figure from parts -----------------------------------------
 
     def construct(self):
@@ -114,8 +140,12 @@ class ProfilePlot(object):
             A plot
 
         """
+        # Initialize figure and axes
         fig = plt.figure(figsize=(9, 7.5), dpi=150)
+        # ax1 is for the layer plot
         ax1 = fig.add_subplot(111)
+        # ax2 is for the SPT plot
+        ax2 = fig.add_subplot(122)
 
         # Get soil layer depths
         depths = self.obj.layers['Depth'].values
@@ -132,6 +162,12 @@ class ProfilePlot(object):
                             soil_type=s_t,
                             label=s_t if s_t not in s_type_list
                             else '')
+            self.soil_patch(axis=ax2,
+                            h_top=h_top,
+                            h_bot=h_bot,
+                            soil_type=s_t,
+                            label='',
+                            width=20)
 
             if s_t not in s_type_list:
                 s_type_list.append(s_t)
@@ -173,12 +209,23 @@ class ProfilePlot(object):
         ax1.set_ylabel('Depth ' + y_units, weight='bold')
 
         # Add a title
-        ax1.set_title('Some title', weight='bold')
+        ax1.set_title(self.obj.name, weight='bold', y=1.08)
 
         # Add the layer legend
         ax1.legend()
-        print(self.obj.layers['Depth'])
 
         plt.subplots_adjust(bottom=0.3)
+
+        # -- SPT Plot
+        # ax2.invert_yaxis()
+        ax1_ymin, ax1_ymax = ax1.get_ylim()
+        self.spt_plot(ax2, ax1_ymin, ax1_ymax)
+        # ax2.set_ylim(ymin=ax1_ymin,
+        #              ymax=ax1_ymax)
+        # ax2.xaxis.tick_top()
+        # ax2.xaxis.set_label_position('top')
+        # ax2.get_yaxis().set_visible(False)
+        # ax2.set_xlabel('Field SPT-N', fontsize=9)
+        # ax2.xaxis.set_tick_params(labelsize=8)
 
         return plt.show()
