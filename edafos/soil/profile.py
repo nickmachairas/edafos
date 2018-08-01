@@ -445,6 +445,34 @@ class SoilProfile(Project):
 
         return value
 
+    # -- Method that corrects field SPT-N values -----------------------------
+
+    def correct_spt(self):
+        """ As per Eqs. 5-2 and 5-3, page 108, Hannigan et al. 2016
+
+
+        Returns:
+
+        """
+        mid_z = []
+        for i in self.layers.index:
+            if i == 1:
+                mid_z.append(self.layers['Height'][i] / 2)
+            else:
+                mid_z.append(self.layers['Depth'][i - 1] +
+                             self.layers['Height'][i] / 2)
+
+        for i, z in zip(self.layers.index, mid_z):
+            field_n = self.layers['Field N'][i]
+            corr_n = self.layers['Corr. N'][i]
+            if not np.isnan(field_n) and np.isnan(corr_n):
+                sigma = self.calculate_stress(z).magnitude
+                print(sigma)
+                c_n = min(0.77 * np.log(40 / sigma), 2.0)
+                self.layers['Corr. N'][i] = int(c_n * field_n)
+
+        return self
+
     # -- Method that returns the plot of the profile -------------------------
 
     def plot(self):
