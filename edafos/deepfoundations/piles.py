@@ -23,13 +23,14 @@ class Pile(Project):
 
     # -- Constructor ---------------------------------------------------------
 
-    def __init__(self, unit_system, pile_type, **kwargs):
+    def __init__(self, unit_system, **kwargs):
         """
         Args:
             unit_system (str): The unit system for the project. Can only be
                 'English', or 'SI'. Properties inherited from the ``Project``
                 class.
 
+        Keyword Args:
             pile_type (str): Type of driven pile. Available options are:
 
                 - ``concrete``: A rectangular (normally square) concrete pile.
@@ -47,7 +48,6 @@ class Pile(Project):
                 - ``cast-in-place``: A concrete cast-in-place pile.
                   Requires keyword argument ``diameter``, ``length``.
 
-        Keyword Args:
             shape (str): Pile shape given pile type. For concrete piles the
                 options are ``square-solid``, ``square-hollow``,
                 ``circle-closed``, ``circle-open``, ``hexagon`` and ``octagon``.
@@ -106,18 +106,9 @@ class Pile(Project):
         """
         super().__init__(unit_system=unit_system)
 
-        # -- Check for valid pile type ---------------------------------------
-        allowed_piles = ['concrete', 'pipe-open', 'pipe-closed', 'h-pile',
-                         'timber', 'cast-in-place']
-        if pile_type in allowed_piles:
-            self.pile_type = pile_type
-        else:
-            raise ValueError("'{}' not recognized. Pile type can only be {}."
-                             "".format(pile_type, allowed_piles))
-
         # -- Check for valid kwargs ------------------------------------------
-        allowed_keys = ['shape', 'side', 'diameter', 'thickness', 'length',
-                        'pen_depth', 'nf_zone', 'taper_dims']
+        allowed_keys = ['pile_type', 'shape', 'side', 'diameter', 'thickness',
+                        'length', 'pen_depth', 'nf_zone', 'taper_dims']
         for key in kwargs:
             if key not in allowed_keys:
                 raise AttributeError("'{}' is not a valid attribute.\nThe "
@@ -125,6 +116,7 @@ class Pile(Project):
                                      "".format(key, allowed_keys))
 
         # -- Assign values ---------------------------------------------------
+        self.pile_type = kwargs.get('pile_type', None)
         self.shape = kwargs.get('shape', None)
         self.side = kwargs.get('side', None)
         self.diameter = kwargs.get('diameter', None)
@@ -133,6 +125,15 @@ class Pile(Project):
         self.pen_depth = kwargs.get('pen_depth', self.length)
         self.nf_zone = kwargs.get('nf_zone', None)
         self.taper_dims = kwargs.get('taper_dims', None)
+
+        # -- Check for valid pile type ---------------------------------------
+        allowed_piles = ['concrete', 'pipe-open', 'pipe-closed', 'h-pile',
+                         'timber', 'cast-in-place']
+        if self.pile_type in allowed_piles:
+            pass
+        else:
+            raise ValueError("'{}' not recognized. Pile type can only be {}."
+                             "".format(self.pile_type, allowed_piles))
 
         # -- Reject negative or zero values ----------------------------------
         for i in [self.side, self.diameter, self.thickness, self.length,
