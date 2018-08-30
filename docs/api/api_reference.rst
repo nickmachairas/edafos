@@ -12,6 +12,7 @@ from the docstrings in the project source code.
 
 .. inheritance-diagram:: edafos.soil.profile edafos.deepfoundations.piles
    edafos.deepfoundations.capacity_base edafos.deepfoundations.capacity_api
+   edafos.deepfoundations.loadtest
    :parts: 1
 
 
@@ -67,6 +68,18 @@ from the docstrings in the project source code.
 ***************************************
 
 .. automodule:: edafos.deepfoundations.capacity_api
+    :members:
+    :undoc-members:
+    :private-members:
+    :show-inheritance:
+
+|
+
+***********************************
+``edafos.deepfoundations.loadtest``
+***********************************
+
+.. automodule:: edafos.deepfoundations.loadtest
     :members:
     :undoc-members:
     :private-members:
