@@ -85,6 +85,14 @@ class Pile(Project):
                 - For **SI**: Enter depth in **meters**.
                 - For **English**: Enter depth in **feet**.
 
+            modulus (float): :math:`E`: Young's Modulus of Elasticity. If not
+                entered, steel piles will be assigned 29,000 ksi (200 GPa),
+                concrete piles will be assigned 5,000 ksi (34.5 GPa) and
+                timber piles will be assigned 1,500 ksi (10.3 GPa).
+
+                - For **SI**: Enter Modulus in **GPa**.
+                - For **English**: Enter Modulus in **ksi**.
+
             nf_zone (float): :math:`D_{nf}`: No-friction zone; this is the
                 length of a segment measured from ground level where frictional
                 resistance does not contribute to pile capacity.
@@ -108,25 +116,16 @@ class Pile(Project):
 
         # -- Check for valid kwargs ------------------------------------------
         allowed_keys = ['pile_type', 'shape', 'side', 'diameter', 'thickness',
-                        'length', 'pen_depth', 'nf_zone', 'taper_dims']
+                        'length', 'pen_depth', 'modulus', 'nf_zone',
+                        'taper_dims']
         for key in kwargs:
             if key not in allowed_keys:
                 raise AttributeError("'{}' is not a valid attribute.\nThe "
                                      "allowed attributes are: {}"
                                      "".format(key, allowed_keys))
 
-        # -- Assign values ---------------------------------------------------
-        self.pile_type = kwargs.get('pile_type', None)
-        self.shape = kwargs.get('shape', None)
-        self.side = kwargs.get('side', None)
-        self.diameter = kwargs.get('diameter', None)
-        self.thickness = kwargs.get('thickness', None)
-        self.length = kwargs.get('length', None)
-        self.pen_depth = kwargs.get('pen_depth', self.length)
-        self.nf_zone = kwargs.get('nf_zone', None)
-        self.taper_dims = kwargs.get('taper_dims', None)
-
         # -- Check for valid pile type ---------------------------------------
+        self.pile_type = kwargs.get('pile_type', None)
         allowed_piles = ['concrete', 'pipe-open', 'pipe-closed', 'h-pile',
                          'timber', 'cast-in-place']
         if self.pile_type in allowed_piles:
@@ -135,9 +134,20 @@ class Pile(Project):
             raise ValueError("'{}' not recognized. Pile type can only be {}."
                              "".format(self.pile_type, allowed_piles))
 
+        # -- Assign values ---------------------------------------------------
+        self.shape = kwargs.get('shape', None)
+        self.side = kwargs.get('side', None)
+        self.diameter = kwargs.get('diameter', None)
+        self.thickness = kwargs.get('thickness', None)
+        self.length = kwargs.get('length', None)
+        self.pen_depth = kwargs.get('pen_depth', self.length)
+        self.nf_zone = kwargs.get('nf_zone', None)
+        self.taper_dims = kwargs.get('taper_dims', None)
+        self.modulus = kwargs.get('modulus', None)
+
         # -- Reject negative or zero values ----------------------------------
         for i in [self.side, self.diameter, self.thickness, self.length,
-                  self.pen_depth, self.nf_zone]:
+                  self.modulus, self.pen_depth, self.nf_zone]:
             if i is None:
                 pass
             elif type(i) not in [int, float]:
@@ -194,6 +204,16 @@ class Pile(Project):
                               if self.thickness is not None else None)
             self.length = self.length * self.set_units('pile_length')
             self.pen_depth = self.pen_depth * self.set_units('pile_length')
+            if self.unit_system == 'English':
+                if self.modulus is None:
+                    self.modulus = 5000 * self.set_units('modulus')
+                else:
+                    self.modulus = self.modulus * self.set_units('modulus')
+            else:
+                if self.modulus is None:
+                    self.modulus = 34.5 * self.set_units('modulus')
+                else:
+                    self.modulus = self.modulus * self.set_units('modulus')
             self.nf_zone = (self.nf_zone * self.set_units('pile_length')
                             if self.nf_zone is not None else None)
             if self.shape in ['square-solid', 'hexagon', 'octagon']:
@@ -271,6 +291,16 @@ class Pile(Project):
             self.thickness = self.thickness * self.set_units('pile_diameter')
             self.length = self.length * self.set_units('pile_length')
             self.pen_depth = self.pen_depth * self.set_units('pile_length')
+            if self.unit_system == 'English':
+                if self.modulus is None:
+                    self.modulus = 29000 * self.set_units('modulus')
+                else:
+                    self.modulus = self.modulus * self.set_units('modulus')
+            else:
+                if self.modulus is None:
+                    self.modulus = 200 * self.set_units('modulus')
+                else:
+                    self.modulus = self.modulus * self.set_units('modulus')
             self.nf_zone = (self.nf_zone * self.set_units('pile_length')
                             if self.nf_zone is not None else None)
 
@@ -296,6 +326,16 @@ class Pile(Project):
             self.thickness = self.thickness * self.set_units('pile_diameter')
             self.length = self.length * self.set_units('pile_length')
             self.pen_depth = self.pen_depth * self.set_units('pile_length')
+            if self.unit_system == 'English':
+                if self.modulus is None:
+                    self.modulus = 29000 * self.set_units('modulus')
+                else:
+                    self.modulus = self.modulus * self.set_units('modulus')
+            else:
+                if self.modulus is None:
+                    self.modulus = 200 * self.set_units('modulus')
+                else:
+                    self.modulus = self.modulus * self.set_units('modulus')
             self.nf_zone = (self.nf_zone * self.set_units('pile_length')
                             if self.nf_zone is not None else None)
 
@@ -336,6 +376,16 @@ class Pile(Project):
             self.side = None
             self.length = self.length * self.set_units('pile_length')
             self.pen_depth = self.pen_depth * self.set_units('pile_length')
+            if self.unit_system == 'English':
+                if self.modulus is None:
+                    self.modulus = 29000 * self.set_units('modulus')
+                else:
+                    self.modulus = self.modulus * self.set_units('modulus')
+            else:
+                if self.modulus is None:
+                    self.modulus = 200 * self.set_units('modulus')
+                else:
+                    self.modulus = self.modulus * self.set_units('modulus')
             self.nf_zone = (self.nf_zone * self.set_units('pile_length')
                             if self.nf_zone is not None else None)
 
@@ -355,6 +405,28 @@ class Pile(Project):
             self.thickness = None
             self.length = self.length * self.set_units('pile_length')
             self.pen_depth = self.pen_depth * self.set_units('pile_length')
+            if self.pile_type == 'timber':
+                if self.unit_system == 'English':
+                    if self.modulus is None:
+                        self.modulus = 1500 * self.set_units('modulus')
+                    else:
+                        self.modulus = self.modulus * self.set_units('modulus')
+                else:
+                    if self.modulus is None:
+                        self.modulus = 10.3 * self.set_units('modulus')
+                    else:
+                        self.modulus = self.modulus * self.set_units('modulus')
+            else:
+                if self.unit_system == 'English':
+                    if self.modulus is None:
+                        self.modulus = 5000 * self.set_units('modulus')
+                    else:
+                        self.modulus = self.modulus * self.set_units('modulus')
+                else:
+                    if self.modulus is None:
+                        self.modulus = 34.5 * self.set_units('modulus')
+                    else:
+                        self.modulus = self.modulus * self.set_units('modulus')
             self.nf_zone = (self.nf_zone * self.set_units('pile_length')
                             if self.nf_zone is not None else None)
 
@@ -748,5 +820,6 @@ class Pile(Project):
                "Thickness: {0.thickness}\n" \
                "Total Length: {0.length}\n" \
                "Penetration Depth: {0.pen_depth}\n" \
+               "Young's Modulus: {0.modulus}\n"\
                "No-Friction Zone: {0.nf_zone}\n" \
                "Taper Dims [[d,l],]: {0.taper_dims}".format(self)
