@@ -311,7 +311,11 @@ class Pile(Project):
                         "\nThe allowed values are: {}"
                         "".format(self.shape, english_hpiles.keys()))
                 else:
-                    pass
+                    self.diameter = english_hpiles[self.shape]['flange_width'] \
+                                    * self.set_units('pile_diameter')
+                    self.thickness = \
+                        english_hpiles[self.shape]['flange_thickness'] \
+                        * self.set_units('pile_diameter')
             elif self.unit_system == 'SI':
                 if self.shape not in si_hpiles:
                     raise ValueError(
@@ -319,15 +323,17 @@ class Pile(Project):
                         "\nThe allowed values are: {}"
                         "".format(self.shape, si_hpiles.keys()))
                 else:
-                    pass
+                    self.diameter = si_hpiles[self.shape]['flange_width'] \
+                                    * self.set_units('pile_diameter')
+                    self.thickness = \
+                        si_hpiles[self.shape]['flange_thickness'] \
+                        * self.set_units('pile_diameter')
             if self.taper_dims is not None:
                 raise ValueError("H-Piles cannot be tapered.")
             else:
                 pass
             # Fix assignments and units
             self.side = None
-            self.diameter = None
-            self.thickness = None
             self.length = self.length * self.set_units('pile_length')
             self.pen_depth = self.pen_depth * self.set_units('pile_length')
             self.nf_zone = (self.nf_zone * self.set_units('pile_length')
