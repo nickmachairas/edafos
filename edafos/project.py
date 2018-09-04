@@ -87,6 +87,10 @@ class Project(object):
                                'English': units.feet ** 2},
             'pile_side_area': {'SI': units.meter ** 2,
                                'English': units.feet ** 2},
+            'modulus': {'SI': 10e9 * units.pascal,
+                        'English': units.kip / units.inches ** 2},
+            'aeol': {'SI': units.kN / units.meter,
+                     'English': units.kip / units.inches},
         }
 
         return unit_dict[dim][self.unit_system]
