@@ -86,6 +86,7 @@ Deep Foundations
 
    deepfoundations/types_o_piles
    deepfoundations/capacity
+   deepfoundations/load_tests
 
 
 
