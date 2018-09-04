@@ -5,11 +5,12 @@
 # -- Imports -----------------------------------------------------------------
 from edafos.deepfoundations import Pile
 import numpy as np
+import pandas as pd
 
 
 # -- LoadTest Class ----------------------------------------------------------
 
-class LoadTest(Pile):
+class LoadTest(object):
     """ Class to represent a new pile load test.
 
     .. warning::
@@ -34,11 +35,27 @@ class LoadTest(Pile):
 
                 - ``static``: TODO: a lot more to add here
 
+            qs_data (list): A list of points where each point is represented by
+                a ``(Q, S)`` tuple.
+
+                - For **SI**: Enter load, :math:`Q`, in **kN** and
+                  displacement, :math:`S`, in **centimeter**.
+                - For **English**: Enter load, :math:`Q`, in **kip** and
+                  displacement, :math:`S`, in **inches**.
+
+            pile (class): Define the pile object that this load test is
+                associated with.
+
         """
-        super().__init__(unit_system=unit_system)
+
+        # -- Check for Unit System -------------------------------------------
+        if unit_system in ['English', 'SI']:
+            self.unit_system = unit_system
+        else:
+            raise ValueError("Unit system can only be 'English' or 'SI'.")
 
         # -- Check for valid kwargs ------------------------------------------
-        allowed_keys = ['loadtest_type']
+        allowed_keys = ['loadtest_type', 'qs_data', 'pile']
         for key in kwargs:
             if key not in allowed_keys:
                 raise AttributeError("'{}' is not a valid attribute.\nThe "
@@ -47,6 +64,8 @@ class LoadTest(Pile):
 
         # -- Assign values ---------------------------------------------------
         self.loadtest_type = kwargs.get('loadtest_type', None)
+        self.qs_data = kwargs.get('qs_data', None)
+        self.pile = kwargs.get('pile', None)
 
         # -- Check for valid loadtest type -----------------------------------
         allowed_loadtest_type = ['static']
@@ -56,5 +75,11 @@ class LoadTest(Pile):
             raise ValueError("Must specify `loadtest_type`.")
         else:
             raise ValueError("'{}' not recognized. Pile load test type can "
-                             "only be {}.".format(self.pile_type,
+                             "only be {}.".format(self.loadtest_type,
                                                   allowed_loadtest_type))
+
+        # -- Convert Q/S data to DataFrame -----------------------------------
+        if self.qs_data:
+            self.qs_data = pd.DataFrame(data=self.qs_data, columns=['Q', 'S'])
+
+        print(self.qs_data)
