@@ -84,3 +84,15 @@ from the docstrings in the project source code.
     :undoc-members:
     :private-members:
     :show-inheritance:
+
+|
+
+***************************
+``edafos.viz.loadtestplot``
+***************************
+
+.. automodule:: edafos.viz.loadtestplot
+    :members:
+    :undoc-members:
+    :private-members:
+    :show-inheritance:
