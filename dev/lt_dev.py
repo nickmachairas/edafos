@@ -1,7 +1,5 @@
 # -- Imports -----------------------------------------------------------------
 from edafos.deepfoundations import Pile, LoadTest
-import pint
-units = pint.UnitRegistry()
 
 
 # -- Set up tests ------------------------------------------------------------
@@ -34,6 +32,8 @@ def olson93():
                   loadtest_type='static',
                   qs_data=lt_data,
                   pile=pile)
+
+    lt.plot()
 
 
 # -- Run ---------------------------------------------------------------------
