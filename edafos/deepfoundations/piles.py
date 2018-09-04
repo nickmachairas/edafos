@@ -809,6 +809,34 @@ class Pile(Project):
 
         return z_list
 
+    # -- Method that calculates AE/L -----------------------------------------
+
+    def aeol(self):
+        """ Method that calculates :math:`AE/L`. For tapered piles it finds the
+        average area over the pile length.
+
+        Returns:
+            Quantity: :math:`AE/L`
+
+                - For **SI**: Result in **kip/in**.
+                - For **English**: Result in **kN/m**.
+
+        """
+
+        if self.taper_dims is None:
+            area = self.xsection_area(self.pen_depth.magnitude)
+            aeol = area * self.modulus / self.length
+        else:
+            tmp_list = []
+            z_range = np.arange(self.pen_depth.magnitude-self.length.magnitude,
+                                self.pen_depth.magnitude, 0.1)
+            for i in z_range:
+                tmp_list.append(self.xsection_area(i).magnitude)
+            area = np.average(tmp_list) * self.xsection_area(z_range[0]).units
+            aeol = area * self.modulus / self.length
+
+        return aeol.to(self.set_units('aeol'))
+
     # -- Method for string representation ------------------------------------
 
     def __str__(self):
