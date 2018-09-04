@@ -3,8 +3,7 @@
 """
 
 # -- Imports -----------------------------------------------------------------
-from edafos.deepfoundations import Pile
-import numpy as np
+from edafos.viz import LoadTestPlot
 import pandas as pd
 
 
@@ -39,7 +38,7 @@ class LoadTest(object):
                 a ``(Q, S)`` tuple.
 
                 - For **SI**: Enter load, :math:`Q`, in **kN** and
-                  displacement, :math:`S`, in **centimeter**.
+                  displacement, :math:`S`, in **centimeters**.
                 - For **English**: Enter load, :math:`Q`, in **kip** and
                   displacement, :math:`S`, in **inches**.
 
@@ -82,4 +81,22 @@ class LoadTest(object):
         if self.qs_data:
             self.qs_data = pd.DataFrame(data=self.qs_data, columns=['Q', 'S'])
 
-        print(self.qs_data)
+    # -- Method that returns a plot ------------------------------------------
+    def plot(self, library='matplotlib'):
+        """ Method that draws the load test plot.
+
+        Args:
+            library (str): Define the library that sill be used to draw the
+                plot. Options are 'matplotlib' or 'bokeh'. Default is
+                'matplotlib'.
+
+        Returns:
+            A load test plot.
+        """
+        p = LoadTestPlot(unit_system=self.unit_system,
+                         library=library,
+                         title='fix this title',
+                         q=self.qs_data.Q.values,
+                         s=self.qs_data.S.values)
+
+        return p.draw()
