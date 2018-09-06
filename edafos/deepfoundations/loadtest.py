@@ -30,6 +30,9 @@ class LoadTest(object):
                 class.
 
         Keyword Args:
+            name (str): Name of load test. If not specified it will be assigned
+                a generic "Pile Load Test".
+
             loadtest_type (str): Type of load test. Available options are:
 
                 - ``static``: TODO: a lot more to add here
@@ -38,7 +41,7 @@ class LoadTest(object):
                 a ``(Q, S)`` tuple.
 
                 - For **SI**: Enter load, :math:`Q`, in **kN** and
-                  displacement, :math:`S`, in **centimeters**.
+                  displacement, :math:`S`, in **millimeters**.
                 - For **English**: Enter load, :math:`Q`, in **kip** and
                   displacement, :math:`S`, in **inches**.
 
@@ -54,7 +57,7 @@ class LoadTest(object):
             raise ValueError("Unit system can only be 'English' or 'SI'.")
 
         # -- Check for valid kwargs ------------------------------------------
-        allowed_keys = ['loadtest_type', 'qs_data', 'pile']
+        allowed_keys = ['name', 'loadtest_type', 'qs_data', 'pile']
         for key in kwargs:
             if key not in allowed_keys:
                 raise AttributeError("'{}' is not a valid attribute.\nThe "
@@ -62,6 +65,7 @@ class LoadTest(object):
                                      "".format(key, allowed_keys))
 
         # -- Assign values ---------------------------------------------------
+        self.name = kwargs.get('name', 'Pile Load Test')
         self.loadtest_type = kwargs.get('loadtest_type', None)
         self.qs_data = kwargs.get('qs_data', None)
         self.pile = kwargs.get('pile', None)
@@ -95,7 +99,7 @@ class LoadTest(object):
         """
         p = LoadTestPlot(unit_system=self.unit_system,
                          library=library,
-                         title='fix this title',
+                         title=self.name,
                          q=self.qs_data.Q.values,
                          s=self.qs_data.S.values)
 
