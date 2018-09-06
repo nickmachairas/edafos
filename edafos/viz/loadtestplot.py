@@ -4,6 +4,9 @@
 
 # -- Imports -----------------------------------------------------------------
 import matplotlib.pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
+from bokeh.plotting import figure, output_file, show
+from bokeh.models import DataRange1d, LinearAxis
 
 
 # -- LoadTestPlot Class ------------------------------------------------------
@@ -37,7 +40,7 @@ class LoadTestPlot(object):
 
             s (list): List of displacement values.
 
-                - For **SI**: Enter displacement, :math:`S`, in **centimeters**.
+                - For **SI**: Enter displacement, :math:`S`, in **millimeters**.
                 - For **English**: Enter displacement, :math:`S`, in **inches**.
 
         """
@@ -76,14 +79,37 @@ class LoadTestPlot(object):
         Returns:
             A load test plot.
         """
-        fig = plt.figure(1, figsize=(6, 6))
+        # TODO: Add logic for when input units are SI
+
+        fig = plt.figure(1, figsize=(6, 6), dpi=150)
         ax = fig.add_subplot(111)
-        ax.plot(self.q, self.s)
-        ax.set_ylabel('Displacement, S (inches)')
-        ax.set_xlabel('Load, Q (kips)')
+        ax.plot(self.q, self.s, lw=2)
+        ax.set_ylabel('Head Displacement, S (inches)', weight='semibold',
+                      size=9)
+        ax.set_xlabel('Axial Load, Q (kip)', weight='semibold', size=9)
         ax.invert_yaxis()
-        ax.grid(color='k', linestyle='--', linewidth=0.75, alpha=0.5, zorder=-1)
-        plt.title(self.title, weight='bold')
+        ax.grid(color='grey', linestyle='--', linewidth=0.75, alpha=0.5,
+                zorder=-1)
+        plt.title(self.title, weight='bold', y=1.10)
+
+        ax2 = ax.twinx()
+        ax2.invert_yaxis()
+        ymin, ymax = ax.get_ylim()
+        ax2.set_ylim(ymin * 25.4, ymax * 25.4)
+        ax2.set_ylabel('Head Displacement, S (mm)', weight='semibold', size=9)
+
+        ax3 = ax.twiny()
+        xmin, xmax = ax.get_xlim()
+        ax3.set_xlim(xmin * 4.4482216, xmax * 4.4482216)
+        ax3.set_xlabel('Axial Load, Q (kilonewton)', weight='semibold', size=9)
+
+        ax.tick_params(axis='both', which='major', labelsize=9)
+        ax2.tick_params(axis='both', which='major', labelsize=9)
+        ax3.tick_params(axis='both', which='major', labelsize=9)
+        ax.xaxis.set_minor_locator(AutoMinorLocator())
+        ax.yaxis.set_minor_locator(AutoMinorLocator())
+        ax2.yaxis.set_minor_locator(AutoMinorLocator())
+        ax3.xaxis.set_minor_locator(AutoMinorLocator())
 
         return plt.show()
 
@@ -94,6 +120,37 @@ class LoadTestPlot(object):
         Returns:
             A load test plot.
         """
+        # TODO: Add logic for when input units are SI
+
+        output_file("lt_plot.html")
+
+        p = figure(plot_width=500,
+                   plot_height=500,
+                   title=self.title,
+                   x_axis_label='Axial Load, Q (kip)',
+                   y_axis_label='Head Displacement, S (inches)')
+
+        p.toolbar_location = None
+        p.toolbar.active_drag = None
+        p.grid.grid_line_dash = 'dotted'
+        p.grid.grid_line_alpha = 0.75
+        p.grid.grid_line_color = 'grey'
+        p.x_range = DataRange1d(start=0, end=max(self.q)*1.08)
+        p.y_range = DataRange1d(flipped=True, end=0, start=max(self.s)*1.08)
+        p.extra_y_ranges = {"y2": DataRange1d(flipped=True, end=0,
+                                              start=max(self.s)*1.08*25.4)}
+        p.add_layout(LinearAxis(y_range_name="y2",
+                                axis_label='Head Displacement, S (mm)'),
+                     'right')
+        p.extra_x_ranges = {"x2": DataRange1d(start=0,
+                                              end=max(self.q)*1.08*4.4482216)}
+        p.add_layout(LinearAxis(x_range_name="x2",
+                                axis_label='Axial Load, Q (kilonewton)'),
+                     'above')
+
+        p.line(self.q, self.s, line_width=2)
+
+        show(p)
 
     # -- Final step to produce the plot --------------------------------------
     def draw(self):
