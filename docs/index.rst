@@ -123,6 +123,15 @@ API Reference
 
    api/api_reference
 
+
+
+.. toctree::
+   :hidden:
+
+   zreferences
+
+
+
 Indices and tables
 ------------------
 
