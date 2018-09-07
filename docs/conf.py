@@ -52,6 +52,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.inheritance_diagram',
+    'sphinxcontrib.bibtex',
 ]
 
 # matplotlib directive options
