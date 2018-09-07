@@ -29,7 +29,7 @@ def olson93():
                (37.31181587, 1.230170784), (0, 1.194708257)]
 
     lt = LoadTest(unit_system='English',
-                  name='Olson Example LTN 93',
+                  name='Olson LTN 93',
                   loadtest_type='static',
                   qs_data=lt_data,
                   pile=pile)
