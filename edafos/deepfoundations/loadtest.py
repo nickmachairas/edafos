@@ -86,13 +86,20 @@ class LoadTest(object):
             self.qs_data = pd.DataFrame(data=self.qs_data, columns=['Q', 'S'])
 
     # -- Method that returns a plot ------------------------------------------
-    def plot(self, library='matplotlib'):
+    def plot(self, library='matplotlib', image_name=None):
         """ Method that draws the load test plot.
 
         Args:
             library (str): Define the library that sill be used to draw the
                 plot. Options are 'matplotlib' or 'bokeh'. Default is
                 'matplotlib'.
+
+            image_name (str): Define the filename of the saved image (png
+                format) of the load test plot. Default is ``None`` and no image
+                is exported. Note: when 'image_name' is defined, the image is
+                exported but not shown. Also, plots are exported for the
+                'matplotlib' library only, the 'bokeh' library (v.0.13.0)
+                required far to many dependencies to export.
 
         Returns:
             A load test plot.
@@ -101,6 +108,7 @@ class LoadTest(object):
                          library=library,
                          title=self.name,
                          q=self.qs_data.Q.values,
-                         s=self.qs_data.S.values)
+                         s=self.qs_data.S.values,
+                         filename=image_name)
 
         return p.draw()

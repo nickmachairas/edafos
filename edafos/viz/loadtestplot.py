@@ -43,6 +43,13 @@ class LoadTestPlot(object):
                 - For **SI**: Enter displacement, :math:`S`, in **millimeters**.
                 - For **English**: Enter displacement, :math:`S`, in **inches**.
 
+            filename (str): Define the filename of the saved image (png format)
+                of the load test plot. Default is ``None`` and no image is
+                exported. Note: when the filename is defined, the image is
+                exported but not shown. Also, plots are exported for the
+                'matplotlib' library only, the 'bokeh' library (v.0.13.0)
+                required far to many dependencies to export.
+
         """
 
         # -- Check for Unit System -------------------------------------------
@@ -52,7 +59,7 @@ class LoadTestPlot(object):
             raise ValueError("Unit system can only be 'English' or 'SI'.")
 
         # -- Check for valid kwargs ------------------------------------------
-        allowed_keys = ['library', 'title', 'q', 's']
+        allowed_keys = ['library', 'title', 'q', 's', 'filename']
         for key in kwargs:
             if key not in allowed_keys:
                 raise AttributeError("'{}' is not a valid attribute.\nThe "
@@ -71,6 +78,7 @@ class LoadTestPlot(object):
             raise ValueError("'q' and 's' lists must be of equal length")
         if (self.q is None) or (self.s is None):
             raise ValueError("Can't plot without data, can I?")
+        self.filename = kwargs.get('filename', None)
 
     # -- Method that produces the Matplotlib plot ----------------------------
     def pltplot(self):
@@ -111,7 +119,10 @@ class LoadTestPlot(object):
         ax2.yaxis.set_minor_locator(AutoMinorLocator())
         ax3.xaxis.set_minor_locator(AutoMinorLocator())
 
-        return plt.show()
+        if self.filename:
+            return plt.savefig(fname=self.filename, dpi=150, format='png')
+        else:
+            return plt.show()
 
     # -- Method that produces the Bokeh plot ---------------------------------
     def bokehplot(self):
@@ -121,8 +132,6 @@ class LoadTestPlot(object):
             A load test plot.
         """
         # TODO: Add logic for when input units are SI
-
-        output_file("lt_plot.html")
 
         p = figure(plot_width=500,
                    plot_height=500,
@@ -150,6 +159,7 @@ class LoadTestPlot(object):
 
         p.line(self.q, self.s, line_width=2)
 
+        output_file("lt_plot.html")
         show(p)
 
     # -- Final step to produce the plot --------------------------------------
