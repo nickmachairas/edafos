@@ -6,7 +6,7 @@ Pile Load Tests
 
 ``edafos`` implements the load test interpretation methods presented below. In
 order to demonstrate each method, a static load test of a driven H-Pile is
-used (:numref:`load-test-example-auto`), taken out of Dr. Olson's database.
+used (:numref:`load-test-example-auto`), taken from Dr. Olson's database.
 
 - HP14X89
 - total length: 55 ft (16.76 m)
@@ -40,7 +40,7 @@ used (:numref:`load-test-example-auto`), taken out of Dr. Olson's database.
               (37.31181587, 1.230170784), (0, 1.194708257)]
 
    lt = LoadTest(unit_system='English',
-                 name='Hello Linzhu!',
+                 name='Static Pile Load Test (Olson LTN 93)',
                  loadtest_type='static',
                  qs_data=lt_data,
                  pile=pile)
@@ -65,8 +65,8 @@ used (:numref:`load-test-example-auto`), taken out of Dr. Olson's database.
 Davisson Offset Limit
 *********************
 
-The Davisson method, proposed by M.T. Davisson (1972) :cite:`Davisson1972-yd`,
+The Davisson method, proposed by M. T. Davisson :cite:`Davisson1972-yd`,
 determines that the failure load corresponds to an allowable settlement which
-occurs at
+occurs a
 
 
