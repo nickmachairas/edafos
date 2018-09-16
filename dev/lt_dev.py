@@ -14,6 +14,7 @@ def olson93():
 
     print(pile)
     print("AE/L:", pile.aeol(), '\n')
+    print("Pile D:", pile._pile_a_d(-60))
 
     lt_data = [(0, 0), (62.0902875, 0.025446481), (114.8390789, 0.071056693),
                (169.2957084, 0.128451499), (216.1013052, 0.189185941),
@@ -29,12 +30,15 @@ def olson93():
                (37.31181587, 1.230170784), (0, 1.194708257)]
 
     lt = LoadTest(unit_system='English',
-                  name='Olson LTN 93',
+                  name='Static Pile Load Test (Olson LTN 93)',
                   loadtest_type='static',
                   qs_data=lt_data,
                   pile=pile)
 
     lt.plot(library='bokeh')
+
+    print("Max Q:", lt.elastic_deflection(with_units=False))
+    print(lt.davisson_criterion())
 
 
 # -- Run ---------------------------------------------------------------------
