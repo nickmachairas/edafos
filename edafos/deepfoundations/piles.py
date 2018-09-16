@@ -542,6 +542,9 @@ class Pile(Project):
         """ A private method that returns the side, :math:`a`, or diameter,
         :math:`d`, of a pile at a depth :math:`z`.
 
+        .. todo:: Low priority fix... This method currently returns diameters
+           even for invalid z's.
+
         Args:
             z (float): Vertical depth to the point of interest, measured from
                 the top of the soil profile.
