@@ -8,8 +8,9 @@ actions.
 # -- Imports -----------------------------------------------------------------
 from datetime import datetime
 from random import randint
-import pint
-units = pint.UnitRegistry()
+# import pint
+# units = pint.UnitRegistry()
+from edafos import units
 
 
 # -- Project Class -----------------------------------------------------------
