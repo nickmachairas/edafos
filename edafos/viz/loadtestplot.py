@@ -50,6 +50,15 @@ class LoadTestPlot(object):
                 'matplotlib' library only, the 'bokeh' library (v.0.13.0)
                 required far to many dependencies to export.
 
+            elastic_deflection (dict): The points defining the elastic
+            deflection line. Input must be a dictionary:
+            ``{'S': [min_s, max_s], 'Q': [min_q, max_q]}``.
+
+                - For **SI**: Enter settlement in **millimeters** and load
+                  in **kilonewtons**.
+                - For **English**: Enter settlement in **inches** and load
+                  in **kip**.
+
         """
 
         # -- Check for Unit System -------------------------------------------
@@ -59,7 +68,8 @@ class LoadTestPlot(object):
             raise ValueError("Unit system can only be 'English' or 'SI'.")
 
         # -- Check for valid kwargs ------------------------------------------
-        allowed_keys = ['library', 'title', 'q', 's', 'filename']
+        allowed_keys = ['library', 'title', 'q', 's', 'filename',
+                        'elastic_deflection']
         for key in kwargs:
             if key not in allowed_keys:
                 raise AttributeError("'{}' is not a valid attribute.\nThe "
@@ -79,6 +89,7 @@ class LoadTestPlot(object):
         if (self.q is None) or (self.s is None):
             raise ValueError("Can't plot without data, can I?")
         self.filename = kwargs.get('filename', None)
+        self.elastic_deflection = kwargs.get('elastic_deflection', None)
 
     # -- Method that produces the Matplotlib plot ----------------------------
     def pltplot(self):
@@ -126,7 +137,7 @@ class LoadTestPlot(object):
 
     # -- Method that produces the Bokeh plot ---------------------------------
     def bokehplot(self):
-        """ Method that produces the Matplotlib plot
+        """ Method that produces the Bokeh plot
 
         Returns:
             A load test plot.
@@ -158,6 +169,9 @@ class LoadTestPlot(object):
                      'above')
 
         p.line(self.q, self.s, line_width=2)
+        p.line(self.elastic_deflection['Q'],
+               self.elastic_deflection['S'],
+               line_width=2)
 
         output_file("lt_plot.html")
         show(p)
