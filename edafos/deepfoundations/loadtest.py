@@ -5,6 +5,7 @@
 # -- Imports -----------------------------------------------------------------
 from edafos.viz import LoadTestPlot
 import pandas as pd
+from edafos import set_units
 
 
 # -- LoadTest Class ----------------------------------------------------------
@@ -109,6 +110,78 @@ class LoadTest(object):
                          title=self.name,
                          q=self.qs_data.Q.values,
                          s=self.qs_data.S.values,
-                         filename=image_name)
+                         filename=image_name,
+                         elastic_deflection=self.elastic_deflection(
+                             with_units=False))
 
         return p.draw()
+
+    # -- Method that returns the pile elastic deflection ---------------------
+    def elastic_deflection(self, with_units=True):
+        """ Method that returns the pile elastic deflection as per Davisson,
+        1972:
+
+        .. math::
+
+           \delta = \dfrac{PL}{AE}
+
+        Args:
+            with_units (bool): If true, returns elastic deflection with
+                units attached (aka as a 'Quantity'). If false, only numerical
+                results are returned as per the units below.
+
+        Returns:
+            dict: The points defining the elastic deflection line.
+
+                - For **SI**: Settlement is in **millimeters** and load
+                  in **kilonewtons**.
+                - For **English**: Settlement is in **inches** and load
+                  in **kip**.
+
+        """
+        min_q = 0 * set_units('capacity', self.unit_system)
+        max_q = self.qs_data.Q.max() * set_units('capacity', self.unit_system)
+
+        min_s = 0 * set_units('pile_settlement', self.unit_system)
+        max_s = max_q / self.pile.aeol()
+
+        if with_units:
+            return {'S': [min_s, max_s], 'Q': [min_q, max_q]}
+        else:
+            return {'S': [min_s.magnitude, max_s.magnitude],
+                    'Q': [min_q.magnitude, max_q.magnitude]}
+
+    # -- Method that returns the Davisson criterion --------------------------
+    def davisson_criterion(self, with_units=True):
+        """ Method that returns the criterion line as per Davisson, 1972:
+
+        .. math::
+
+           \delta = \dfrac{PL}{AE} + [0.15 \\text{ in } \\textit{ or }
+           4 \\textrm{ mm }] + \dfrac{b}{120}
+
+        Args:
+            with_units (bool): If true, returns the criterion with
+                units attached (aka as a 'Quantity'). If false, only numerical
+                results are returned as per the units below.
+
+        Returns:
+            dict: The points defining the criterion line.
+
+                - For **SI**: Settlement is in **millimeters** and load
+                  in **kilonewtons**.
+                - For **English**: Settlement is in **inches** and load
+                  in **kip**.
+
+        """
+        min_s_elastic = self.elastic_deflection()['S'][0]
+        max_s_elastic = self.elastic_deflection()['S'][1]
+
+        if self.unit_system == 'SI':
+            crit = 3.81 * set_units('pile_settlement', self.unit_system)
+        else:
+            crit = 0.15 * set_units('pile_settlement', self.unit_system)
+
+        min_s = min_s_elastic + crit + self.pile.diameter/120
+
+        return min_s
