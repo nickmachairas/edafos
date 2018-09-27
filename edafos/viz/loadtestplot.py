@@ -31,6 +31,10 @@ class LoadTestPlot(object):
                 plot. Options are 'matplotlib' or 'bokeh'. Default is
                 'matplotlib'.
 
+            web_embed (bool): If True, the plot is returned but not shown or
+                saved. Used to embed the plot in websites, tested with Flask.
+                Default is False. Currently only works with the Bokeh library.
+
             title (str): Title of the plot.
 
             q (list): List of load values.
@@ -68,7 +72,7 @@ class LoadTestPlot(object):
             raise ValueError("Unit system can only be 'English' or 'SI'.")
 
         # -- Check for valid kwargs ------------------------------------------
-        allowed_keys = ['library', 'title', 'q', 's', 'filename',
+        allowed_keys = ['library', 'web_embed', 'title', 'q', 's', 'filename',
                         'elastic_deflection']
         for key in kwargs:
             if key not in allowed_keys:
@@ -79,6 +83,7 @@ class LoadTestPlot(object):
         # -- Assign values ---------------------------------------------------
         self.title = kwargs.get('title', None)
         self.library = kwargs.get('library', 'matplolib')
+        self.web_embed = kwargs.get('web_embed', False)
         if self.library not in ['matplotlib', 'bokeh']:
             raise ValueError("Plotting library can only be 'matplotlib' or "
                              "'bokeh'")
@@ -173,8 +178,11 @@ class LoadTestPlot(object):
                self.elastic_deflection['S'],
                line_width=2)
 
-        output_file("lt_plot.html")
-        show(p)
+        if self.web_embed:
+            return p
+        else:
+            output_file("lt_plot.html")
+            show(p)
 
     # -- Final step to produce the plot --------------------------------------
     def draw(self):

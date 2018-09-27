@@ -87,13 +87,17 @@ class LoadTest(object):
             self.qs_data = pd.DataFrame(data=self.qs_data, columns=['Q', 'S'])
 
     # -- Method that returns a plot ------------------------------------------
-    def plot(self, library='matplotlib', image_name=None):
+    def plot(self, library='matplotlib', web_embed=False, image_name=None):
         """ Method that draws the load test plot.
 
         Args:
             library (str): Define the library that sill be used to draw the
                 plot. Options are 'matplotlib' or 'bokeh'. Default is
                 'matplotlib'.
+
+            web_embed (bool): If True, the plot is returned but not shown or
+                saved. Used to embed the plot in websites, tested with Flask.
+                Default is False. Currently only works with the Bokeh library.
 
             image_name (str): Define the filename of the saved image (png
                 format) of the load test plot. Default is ``None`` and no image
@@ -107,6 +111,7 @@ class LoadTest(object):
         """
         p = LoadTestPlot(unit_system=self.unit_system,
                          library=library,
+                         web_embed=web_embed,
                          title=self.name,
                          q=self.qs_data.Q.values,
                          s=self.qs_data.S.values,
