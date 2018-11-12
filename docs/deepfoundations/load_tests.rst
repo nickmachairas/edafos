@@ -70,23 +70,3 @@ The Davisson method, proposed by M. T. Davisson :cite:`Davisson1972-yd`,
 determines that the failure load corresponds to an allowable settlement which
 occurs a
 
-
-The :math:`\alpha` factor is calculated based on the conditional in equation
-:eq:`a-rev-api-clay`.
-
-
-.. math::
-   :label: a-rev-api-clay
-
-   \alpha = \begin{cases}
-   0.5\psi^{-0.5} & \textrm{if} \quad \psi \leq 1.0 \\
-   0.5\psi^{-0.25} & \textrm{if} \quad \psi > 1.0
-   \end{cases} \quad \leq 1.0
-
-where:
-
-- :math:`\psi`: :math:`s_u/\bar{\sigma'}` at a depth, :math:`z`
-- :math:`\bar{\sigma'}`: average effective stress (at midpoint)
-- :math:`s_u`: undrained shear strength of soil
-
-
