@@ -55,8 +55,8 @@ class LoadTestPlot(object):
                 required far to many dependencies to export.
 
             elastic_deflection (dict): The points defining the elastic
-            deflection line. Input must be a dictionary:
-            ``{'S': [min_s, max_s], 'Q': [min_q, max_q]}``.
+                deflection line. Input must be a dictionary: ``{'S': [min_s,
+                max_s], 'Q': [min_q, max_q]}``.
 
                 - For **SI**: Enter settlement in **millimeters** and load
                   in **kilonewtons**.
