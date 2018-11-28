@@ -61,7 +61,8 @@ The general equation for shaft resistance is given by:
 where:
 
 - :math:`f_s`: unit shaft resistance (adhesion)
-- :math:`A_s`: side surface area of pile
+- :math:`A_s`: side surface area of pile (note that for tapered piles surface
+  area might be different at each layer)
 
 and,
 
@@ -97,7 +98,7 @@ where:
 Toe Resistance
 --------------
 
-The toe resistance is equal to:
+Toe resistance is equal to:
 
 .. math:: R_p = q_p A_p
    :label: R_p-api
@@ -112,7 +113,7 @@ where:
 :math:`R_p = q_p A_{pp}` where :math:`A_{pp}` is the cross sectional area of
 soil plug in open end pipe or H-piles at pile toe.
 
-The unit toe resistance, :math:`q_p`, is given by:
+Unit toe resistance, :math:`q_p`, is given by:
 
 .. math:: q_p = 9 s_u
    :label: q_p-api-clay
