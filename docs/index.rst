@@ -10,6 +10,10 @@ Welcome to edafos's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   api.rst
+
+
+.. todolist::
 
 
 Indices and tables
