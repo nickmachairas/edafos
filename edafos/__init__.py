@@ -7,3 +7,8 @@ Results are returned on U.S. customary units (default) or converted to S.I.
 :Unit weight: pounds per cubic feet (lb/ft3)
 
 """
+
+from pint import UnitRegistry
+units = UnitRegistry()
+units.define('psf = lbf/foot**2')
+units.define('kN_m2 = kN/m**2')
