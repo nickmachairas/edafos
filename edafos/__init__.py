@@ -11,4 +11,7 @@ Results are returned on U.S. customary units (default) or converted to S.I.
 from pint import UnitRegistry
 units = UnitRegistry()
 units.define('psf = lbf/foot**2')
+units.define('ksf = 1000*lbf/foot**2')
 units.define('kN_m2 = kN/m**2')
+
+from edafos.stresses import effective_stress

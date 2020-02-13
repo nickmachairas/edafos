@@ -45,13 +45,20 @@ def _gamma_avg(z: float, heights: list, gammas: list):
 
 
 def effective_stress(z: float, gwt: float, heights: list, gammas: list):
-    """
-    Example:
-        This is an example.
+    """ Function that calculates effective stress at a depth, z, from ground
+    level, based on the following formula.
 
-        >>> from edafos.stresses import effective_stress
-        >>> effective_stress(1, 3)
-        4
+    .. math:: \sigma' = \gamma (z - z_w) + (\gamma - \gamma_w) z_w
+
+    Example:
+        Effective stress at mid-height of the fifth layer of a 5-layer soil
+        profile.
+
+        >>> from edafos import effective_stress
+        >>> heights = [3.3, 82, 9.8, 311.7, 42.7]
+        >>> gammas = [65, 95, 130, 140, 140]
+        >>> effective_stress(428.15, -1.64, heights, gammas).to('ksf')
+        <Quantity(29.188940000000006, 'ksf')>
 
 
     Args:

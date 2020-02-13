@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="edafos",
-    version="0.0.1",
+    version="0.0.1-dev",
     author="Nick Machairas",
     author_email="nick@machairas.com",
     description="A Suite of Soil Mechanics Algorithms",
@@ -20,6 +20,7 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'numpy==1.18.1'
+        'numpy==1.18.1',
+        'Pint==0.10.1',
     ],
 )
